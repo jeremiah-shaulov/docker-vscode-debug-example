@@ -1,0 +1,76 @@
+services:
+
+  http_service:
+    restart: "no"
+
+  php_fpm_service:
+    build:
+      target: debug
+    extra_hosts:
+      - host.docker.internal:host-gateway # for xdebug
+    restart: "no"
+
+  deno_service:
+    command: run --unstable --allow-net --inspect=0.0.0.0:60220 /usr/src/deno_service/main.ts
+    ports:
+      - 64840:64840 # app service port
+      - 60220:60220 # debugger port
+    restart: "no"
+
+  node_service:
+    command: --inspect=0.0.0.0:8548 /usr/src/node_service/main.js
+    ports:
+      - 12982:12982 # app service port
+      - 8548:8548 # debugger port
+    restart: "no"
+
+  rust_service:
+    build:
+      target: debug
+    command: bash -c "lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service"
+    pid: host
+    ports:
+      - 54329:54329 # app service port
+      - 29935:29935 # lldb-server listens for connections
+      - 18088:18088 # lldb-server service port
+    restart: "no"
+
+  swift_service:
+    build:
+      target: debug
+    command: bash -c "lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run"
+    pid: host
+    ports:
+      - 15880:15880 # app service port
+      - 56439:56439 # lldb-server listens for connections
+      - 16276:16276 # lldb-server service port
+    restart: "no"
+
+  c_service:
+    build:
+      target: debug
+    command: bash -c "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"
+    pid: host
+    ports:
+      - 8543:8543 # app service port
+      - 54255:54255 # lldb-server listens for connections
+      - 9850:9850 # lldb-server service port
+    restart: "no"
+
+  dotnet_service:
+    build:
+      target: debug
+    command: dotnet run
+    pid: host
+    ports:
+      - 7287:7287 # app service port
+    restart: "no"
+
+  python_service:
+    build:
+      target: debug
+    command: python -m ptvsd --host 0.0.0.0 --port 22742 --multiprocess main.py
+    ports:
+      - 8497:8497 # app service port
+      - 22742:22742 # debugger port
+    restart: "no"

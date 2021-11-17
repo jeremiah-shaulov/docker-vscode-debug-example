@@ -1,0 +1,12 @@
+{	"name": "node_service",
+	"version": "1.0.0",
+	"description": "Demo service for Docker",
+	"type": "module",
+	"main": "main.js",
+	"scripts":
+	{	"start": "node main.js"
+	},
+	"dependencies":
+	{
+	}
+}

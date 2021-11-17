@@ -1,0 +1,108 @@
+# To run the containers in production mode do:
+# HTTP_PORT=8888 docker-compose up -d --build --remove-orphans
+#
+# To run the containers in dev mode do:
+# HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build --remove-orphans
+#
+# To debug rust, swift and c need to set this flag on host system:
+# echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+#
+# Well-known ports:
+#
+# - 21104 - php_fpm_service listens on this port (FastCGI protocol).
+# - 33078 - If docker-compose.dev.yaml is enabled, PHP debugger on php_fpm_service connects to such port on host machine (host.docker.internal). This port appears in ".vscode/launch.json" file.
+#
+# - 64840 - deno_service listens on this port.
+# - 60220 - If docker-compose.dev.yaml is enabled, Javascript debugger on deno_service listens to this port. This port appears in ".vscode/launch.json" file.
+#
+# - 12982 - node_service listens on this port.
+# -  8548 - If docker-compose.dev.yaml is enabled, Javascript debugger on node_service listens to this port. This port appears in ".vscode/launch.json" file.
+#
+# - 54329 - rust_service listens on this port.
+# - 29935 - If docker-compose.dev.yaml is enabled, Rust debugger (lldb) on rust_service listens to this port. This port appears in ".vscode/launch.json" file.
+# - 18088 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on rust_service.
+#
+# - 15880 - swift_service listens on this port.
+# - 56439 - If docker-compose.dev.yaml is enabled, Swift debugger (lldb) on swift_service listens to this port. This port appears in ".vscode/launch.json" file.
+# - 16276 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on swift_service.
+#
+# -  8543 - c_service listens on this port.
+# - 54255 - If docker-compose.dev.yaml is enabled, C debugger (lldb) on c_service listens to this port. This port appears in ".vscode/launch.json" file.
+# -  9850 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on c_service.
+#
+# -  7287 - dotnet_service listens on this port.
+#
+# -  8497 - python_service listens on this port.
+# - 22742 - If docker-compose.dev.yaml is enabled, Python debugger on python_service listens to this port. This port appears in ".vscode/launch.json" file.
+#
+
+services:
+
+  http_service:
+    build:
+      context: .
+      dockerfile: ./infra/http_service/Dockerfile
+    volumes:
+      - ./src/php_fpm_service:/usr/src/php_fpm_service
+    ports:
+      - ${HTTP_PORT:-80}:80
+    restart: always
+    depends_on:
+      - php_fpm_service
+
+  php_fpm_service:
+    build:
+      context: .
+      dockerfile: ./infra/php_fpm_service/Dockerfile
+    volumes:
+      - ./src/php_fpm_service:/usr/src/php_fpm_service
+    restart: always
+
+  deno_service:
+    build:
+      context: .
+      dockerfile: ./infra/deno_service/Dockerfile
+    command: run --unstable --allow-net /usr/src/deno_service/main.ts
+    restart: always
+
+  node_service:
+    build:
+      context: .
+      dockerfile: ./infra/node_service/Dockerfile
+    command: node /usr/src/node_service/main.js
+    restart: always
+
+  rust_service:
+    build:
+      context: .
+      dockerfile: ./infra/rust_service/Dockerfile
+    command: /usr/bin/rust_service
+    restart: always
+
+  swift_service:
+    build:
+      context: .
+      dockerfile: ./infra/swift_service/Dockerfile
+    command: /usr/bin/swift_service
+    restart: always
+
+  c_service:
+    build:
+      context: .
+      dockerfile: ./infra/c_service/Dockerfile
+    command: /usr/bin/c_service
+    restart: always
+
+  dotnet_service:
+    build:
+      context: .
+      dockerfile: ./infra/dotnet_service/Dockerfile
+    command: dotnet /usr/bin/dotnet_service/dotnet_service.dll
+    restart: always
+
+  python_service:
+    build:
+      context: .
+      dockerfile: ./infra/python_service/Dockerfile
+    command: python main.py
+    restart: always

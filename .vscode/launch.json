@@ -1,0 +1,112 @@
+{	"version": "0.2.0",
+	"configurations":
+	[	{	"name": "php_fpm_service: Listen for connections from Docker",
+			"type": "php",
+			"request": "launch",
+			"port": 33078,
+			"stopOnEntry": false,
+			"pathMappings":
+			{	"/usr/src/php_fpm_service": "${workspaceRoot}/src/php_fpm_service"
+			}
+		},
+		{	"name": "deno_service: Attach to Docker",
+			"type": "pwa-node",
+			"request": "attach",
+			"port": 60220,
+			"localRoot": "${workspaceFolder}/src/deno_service",
+			"remoteRoot": "/usr/src/deno_service"
+		},
+		{	"name": "node_service: Attach to Docker",
+			"type": "pwa-node",
+			"request": "attach",
+			"port": 8548,
+			"localRoot": "${workspaceFolder}/src/node_service",
+			"remoteRoot": "/usr/src/node_service"
+		},
+		{	"name": "rust_service: Attach to Docker",
+			"type": "lldb",
+			"request": "attach",
+			"pid": "${input:rust_service_pid}",
+			"initCommands":
+			[	"platform select remote-linux",
+				"platform connect connect://localhost:29935",
+				"settings set target.inherit-env false",
+				"settings set target.source-map /usr/src/rust_service ${workspaceFolder}/src/rust_service"
+			]
+		},
+		{	"name": "swift_service: Attach to Docker",
+			"type": "lldb",
+			"request": "attach",
+			"pid": "${input:swift_service_pid}",
+			"initCommands":
+			[	"platform select remote-linux",
+				"platform connect connect://localhost:56439",
+				"settings set target.inherit-env false",
+				"settings set target.source-map /usr/src/swift_service ${workspaceFolder}/src/swift_service"
+			]
+		},
+		{	"name": "c_service: Attach to Docker",
+			"type": "lldb",
+			"request": "attach",
+			"pid": "${input:c_service_pid}",
+			"initCommands":
+			[	"platform select remote-linux",
+				"platform connect connect://localhost:54255",
+				"settings set target.inherit-env false",
+				"settings set target.source-map /usr/src/c_service ${workspaceFolder}/src/c_service"
+			]
+		},
+		{	"name": "dotnet_service: Attach to Docker",
+			"type": "coreclr",
+			"request": "attach",
+			"processId": "${input:dotnet_service_pid}",
+			"pipeTransport":
+			{	"pipeProgram": "docker",
+				"pipeArgs": ["exec", "-i", "docker-vscode-debug-example_dotnet_service_1"],
+				"debuggerPath": "/usr/bin/vsdbg/vsdbg",
+				"pipeCwd": "${workspaceRoot}",
+				"quoteArgs": false
+			},
+			"sourceFileMap":
+			{	"/usr/src/dotnet_service": "${workspaceRoot}/src/dotnet_service"
+			}
+		},
+		{	"name": "python_service: Attach to Docker",
+			"type": "python",
+			"request": "attach",
+			"port": 22742,
+			"localRoot": "${workspaceFolder}/src/python_service",
+			"remoteRoot": "/usr/src/python_service"
+		}
+	],
+	"inputs":
+	[	{	"id": "rust_service_pid",
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args":
+			{	"command": "pidof /usr/bin/rust_service"
+			}
+		},
+		{	"id": "swift_service_pid",
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args":
+			{	"command": "pidof swift_service"
+			}
+		},
+		{	"id": "dotnet_service_pid",
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args":
+			{	"command": "pidof dotnet_service"
+			}
+		},
+		{	"id": "c_service_pid",
+			"type": "command",
+			"command": "shellCommand.execute",
+			"args":
+			{	"command": "pidof c_service"
+			}
+		}
+	]
+}
