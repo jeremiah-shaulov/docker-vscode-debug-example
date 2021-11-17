@@ -3,11 +3,9 @@
 # ------------------------------------------------------------------------------
 
 FROM silkeh/clang:12 as base
+
 RUN apt-get update && \
 	apt-get install -y libev-dev
-
-RUN addgroup --gid=1969 c_service_user && \
-	adduser --uid=1969 --gid=1969 --shell /bin/false --system c_service_user
 
 WORKDIR /usr/src/c_service
 COPY ./src/c_service .
@@ -40,7 +38,13 @@ RUN clang -O0 -g main.c -lev -o /usr/bin/c_service && \
 # Production image
 # ------------------------------------------------------------------------------
 
-FROM debian:bullseye
+FROM debian:bullseye-slim
+
+RUN addgroup --gid=1969 c_service_user && \
+	adduser --uid=1969 --gid=1969 --shell /bin/false --system c_service_user
+
+RUN apt-get update && \
+	apt-get install -y libev4
 
 WORKDIR /usr/src/c_service
 COPY --from=base /usr/bin/c_service /usr/bin/c_service

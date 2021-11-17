@@ -119,7 +119,7 @@ void async_send(struct ev_loop *loop, int fd, char *data, int data_len, async_cb
 // This object has all the logic on how to handle an incoming connection.
 //
 // First create the object with `client_new(loop, fd)`.
-// Then `call handle_conn(client, 0)` to handle the connection accepted from the server socket.
+// Then call `handle_conn(client, 0)` to handle the connection accepted from the server socket.
 // `handle_conn()` will serve the request, and at last it will `close()` it's `fd`, and delete the object.
 // ---------------------------------------------
 
