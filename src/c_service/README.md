@@ -3,11 +3,11 @@
 Rock'n'roll, stylish haircuts, cigarette smoke, and C programming language - this is the magic of 1970s.
 Is this joy or pain to create Docker services in C, or maybe both, i don't know, but here is the example of how this can be achieved.
 
-This directory of the [repository](../../) contains C implementation of simple Docker service.
+This directory of the [repository](../../Readme.md) contains C implementation of simple Docker service.
 This service can comminicate with other services, and it's possible to debug it from host machine with VSCode IDE.
 The debugger can be attached to the process running in the container, and you can stop on breakpoints.
 
-See main [page](../../) on how to run this project. Here i'll explain what the debugging process looks like.
+See main [page](../../Readme.md) on how to run this project. Here i'll explain what the debugging process looks like.
 
 In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, i install `lldb`:
 
