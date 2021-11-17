@@ -36,6 +36,8 @@ HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml 
 
 Change HTTP_PORT if needed.
 
+Every time you edit something either in infrastructure definition (`docker-compose.yaml`, `Dockerfile`) or in source code, you need to rerun the above command to rebuild the containers.
+
 This starts 9 docker services:
 - http_service
 - php_fpm_service
@@ -76,8 +78,9 @@ The debugger must stop at that breakpoint.
 docker-compose stop
 ```
 
-Then you may want to remove the containers:
+Then you may want to remove the containers and images:
 
 ```bash
 docker container prune
+docker image prune
 ```
