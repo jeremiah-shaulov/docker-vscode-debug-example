@@ -19,7 +19,15 @@ cat /proc/sys/kernel/yama/ptrace_scope # see original value
 echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 ```
 
-3. Start the Docker services. They can be started either in dev or production mode.
+3. Debugging functionality in VSCode is provided by extensions. You'll need these:
+
+- [Tasks Shell Input](https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input)
+- [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+- [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+- [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
+
+4. Start the Docker services. They can be started either in dev or production mode.
 Debugging will only work in dev. To start dev, `cd` to the directory where you cloned the project, and:
 
 ```bash
@@ -49,9 +57,9 @@ The main interface is `http_service`. It forwards requests to `php_fpm_service` 
 
 `php_fpm_service` has 1 web page called `index.php`. This script queries all the other services, and shows the result.
 
-4. So open `http://localhost:8888/` in your browser, while services are running.
+5. So open `http://localhost:8888/` in your browser, while services are running.
 
-5. This project ships VSCode configuration file called `.vscode/launch.json`, that contains debug configurations for each one of the services.
+6. This project ships VSCode configuration file called `.vscode/launch.json`, that contains debug configurations for each one of the services.
 If you switch to "Run and Debug" tab (Ctrl+Shift+D), you'll see all the configurations in the launch menu.
 
 If you want to debug certain service, say `deno_service`, go to it's source file - `src/deno_service/main.ts`, find line that prints "Conn" message -
@@ -61,7 +69,7 @@ In launch tab of VSCode, select configuration called `deno_service: Attach to Do
 Refresh the `http://localhost:8888/` page.
 The debugger must stop at that breakpoint.
 
-6. To stop all the services do:
+7. To stop all the services do:
 
 ```bash
 # from the project directory

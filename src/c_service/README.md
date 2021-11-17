@@ -63,12 +63,17 @@ Then in [launch.json](../../.vscode/launch.json) the configuration looks like th
 ```
 
 So VSCode will connect to `localhost:54255`, which is mapped to `<c_service in docker>:54255` to communicate with the debugger.
+Our service is running as `/usr/bin/c_service` executable, and when debugger client connects to the `lldb-server`, it needs to execute attach command, giving it process id.
+When you start debugging, the IDE will execute `pidof c_service` command to determine the process id.
+VSCode supports parameters substitution like `${input:c_service_pid}`. To substitute this, it will look for command called "c_service_pid" in "inputs" part of the `launch.json`.
+Command type "shellCommand.execute" is provided by [Tasks Shell Input](https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input) extension.
+You need to install it.
 
 It's also possible to debug with `lldb` client installed on your machine, bypassing VSCode, or to run lldb from a Docker image:
 
 ```bash
 # from project root directory
-docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach '(pidof c_service) -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
+docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach '$(pidof c_service) -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
 ```
 
 Then inside the `lldb` client you can put a breakpoint on `handle_conn` function:
