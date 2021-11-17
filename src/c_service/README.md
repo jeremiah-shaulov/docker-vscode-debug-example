@@ -3,11 +3,11 @@
 Rock'n'roll, stylish haircuts, cigarette smoke, and C programming language - this is the magic of 1970s.
 Is this joy or pain to create Docker services in C, or maybe both, i don't know, but here is the example of how this can be achieved.
 
-This directory of the [repository](../../Readme.md) contains C implementation of simple Docker service.
+This directory of the [repository](../../README.md) contains C implementation of simple Docker service.
 This service can comminicate with other services, and it's possible to debug it from host machine with VSCode IDE.
 The debugger can be attached to the process running in the container, and you can stop on breakpoints.
 
-See main [page](../../Readme.md) on how to run this project. Here i'll explain what the debugging process looks like.
+See main [page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
 
 In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, i install `lldb`:
 
@@ -15,7 +15,7 @@ In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, 
 apt-get install -y lldb
 ```
 
-This package includes `lldb-server` that is running in parallel with the application. I run it like this from [docker-compose.dev.yaml](../docker-compose.dev.yaml):
+This package includes `lldb-server` that is running in parallel with the application. I run it like this from [docker-compose.dev.yaml](../../docker-compose.dev.yaml):
 
 ```dockerfile
 c_service:
@@ -35,7 +35,7 @@ During communication with debugger client (on host machine), `lldb-server` uses 
 Notice `pid: host` line. This tells docker to share process id namespace with host. With this flag set, host can see processes of the container in it's `/proc` or `ps aux`.
 And also container will see host processes.
 
-Then in [launch.json](../.vscode/launch.json) the configuration looks like this:
+Then in [launch.json](../../.vscode/launch.json) the configuration looks like this:
 
 ```json
 "configurations":
