@@ -60,3 +60,16 @@ Put a breakpoint at this line.
 In launch tab of VSCode, select configuration called `deno_service: Attach to Docker`.
 Refresh the `http://localhost:8888/` page.
 The debugger must stop at that breakpoint.
+
+6. To stop all the services do:
+
+```bash
+# from the project directory
+docker-compose stop
+```
+
+Then you may want to remove the containers:
+
+```bash
+docker container prune
+```
