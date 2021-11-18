@@ -55,6 +55,14 @@ You can see the services state by executing:
 docker ps --all
 ```
 
+If you want to start the same services in production mode (slimmer images, faster execution, and impossible debugging), then run `docker-compose` like this:
+
+```bash
+HTTP_PORT=8888 docker-compose up -d --build --remove-orphans
+```
+
+But in this article, i always assume that you're running in dev mode.
+
 The main interface is `http_service`. It forwards requests to `php_fpm_service` through FastCGI protocol.
 
 `php_fpm_service` has 1 web page called `index.php`. This script queries all the other services, and shows the result.

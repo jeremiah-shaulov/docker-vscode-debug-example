@@ -2,7 +2,7 @@
 
 This little Docker service demonstrates the ability to remote-debug application running in a Docker container from host machine.
 
-See main [page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
+See [main page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
 
 When `dev` version is started, the command that runs inside the container looks like this: (find it in [docker-compose.dev.yaml](../../docker-compose.dev.yaml))
 
@@ -18,4 +18,16 @@ When `dev` version is started, the command that runs inside the container looks 
 This activates the debugger service that `deno` supports (Chrome Debugging Protocol). The debugger listens for commands on port `60220`.
 This port is mapped to the same port on host machine, so VSCode debugger can connect to it.
 
-When you start the debugger, it attaches to the running deno process, and sends to the debugger server commands.
+When you start the debugger, it attaches to the running deno process, and sends commands to the debugger server.
+
+[launch.json](../../.vscode/launch.json) configuration looks like this:
+
+```json
+{	"name": "deno_service: Attach to Docker",
+	"type": "pwa-node",
+	"request": "attach",
+	"port": 60220,
+	"localRoot": "${workspaceFolder}/src/deno_service",
+	"remoteRoot": "/usr/src/deno_service"
+},
+```
