@@ -1,11 +1,15 @@
 services:
 
   http_service:
+    volumes:
+      - ./src/php_fpm_service:/usr/src/php_fpm_service
     restart: "no"
 
   php_fpm_service:
     build:
       target: debug
+    volumes:
+      - ./src/php_fpm_service:/usr/src/php_fpm_service
     extra_hosts:
       - host.docker.internal:host-gateway # for xdebug
     restart: "no"
