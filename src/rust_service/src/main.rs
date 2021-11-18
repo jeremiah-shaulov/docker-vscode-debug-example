@@ -1,30 +1,50 @@
-use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream};
-use std::thread;
+use tokio::net::{TcpListener, TcpStream};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
-fn main() -> std::io::Result<()>
-{	let listener = TcpListener::bind("rust_service:54329")?;
-	println!("Service started on {:?}", listener.local_addr());
+const LISTEN: &str = "rust_service:54329";
+const BUFFER_SIZE: usize = 1024;
 
-	for stream in listener.incoming()
-	{	let stream = stream?;
-		thread::spawn(move || handle_conn(stream));
+#[tokio::main]
+async fn main() -> std::io::Result<()>
+{	let listener = TcpListener::bind(LISTEN).await?;
+	println!("Service started on {}", LISTEN);
+	while let Ok((stream, _socket_addr)) = listener.accept().await
+	{	tokio::spawn
+		(	async move
+			{	handle_conn(stream).await;
+			}
+		);
 	}
-
 	println!("Service terminated");
 	Ok(())
 }
 
-fn handle_conn(mut stream: TcpStream)
+async fn handle_conn(mut stream: TcpStream)
 {	println!("Conn");
-	writeln!(stream, "Hi, i'm rust_service").unwrap();
-	let mut buf = [0u8; 1024];
-	loop
-	{	let len = stream.read(&mut buf).unwrap();
-		if len == 0
-		{	break;
-		}
-		stream.write_all(&mut buf[.. len]).unwrap();
+	if let Err(err) = stream.write_all(b"Hi, i'm rust_service\n").await
+	{	eprintln!("Failed to write to socket: {:?}", err);
+		return;
 	}
-	writeln!(stream, "Bye").unwrap();
+	let mut buf = [0u8; BUFFER_SIZE];
+	loop
+	{	// Read
+		let n = match stream.read(&mut buf).await
+		{	Ok(n) if n == 0 => break, // Socket closed
+			Ok(n) => n,
+			Err(err) =>
+			{	eprintln!("Failed to read from socket: {:?}", err);
+				return;
+			}
+		};
+		// Write
+		if let Err(err) = stream.write_all(&buf[0 .. n]).await
+		{	eprintln!("Failed to write to socket: {:?}", err);
+			return;
+		}
+	}
+	// Socket closed
+	if let Err(err) = stream.write_all(b"Bye\n").await
+	{	eprintln!("Failed to write to socket: {:?}", err);
+		return;
+	}
 }
