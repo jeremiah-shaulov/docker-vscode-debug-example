@@ -6,7 +6,8 @@ FROM rust:1.56 as debug
 
 # 1. Install lldb-server, that will be running together with the app.
 RUN apt-get update && \
-	apt-get install -y lldb
+	apt-get install -y --no-install-recommends lldb && \
+	rm -rf /var/lib/apt/lists/*
 
 # 2. App source code will be copied to /usr/src/rust_service for compilation.
 #	Later i will delete it.
@@ -26,6 +27,16 @@ RUN mkdir src && \
 COPY ./src/rust_service .
 RUN cargo build && \
 	mv target/debug/rust_service -t /usr/bin
+
+# 5. Run the app + lldb-server in background.
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service"]
+
+# app service port
+EXPOSE 54329
+# lldb-server listens for connections
+EXPOSE 29935
+# lldb-server service port
+EXPOSE 18088
 
 
 # ------------------------------------------------------------------------------
@@ -56,4 +67,9 @@ RUN addgroup --gid=1030 rust_service_user && \
 COPY --from=prod-build /usr/bin/rust_service /usr/bin/rust_service
 RUN chown rust_service_user: /usr/bin/rust_service
 
+# 3. How to run the app.
 USER rust_service_user
+CMD ["/usr/bin/rust_service"]
+
+# app service port
+EXPOSE 54329

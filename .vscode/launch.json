@@ -26,7 +26,7 @@
 		{	"name": "rust_service: Attach to Docker",
 			"type": "lldb",
 			"request": "attach",
-			"pid": "${input:rust_service_pid}",
+			"program": "/usr/bin/rust_service", // assuming that the service is running under this name in the container
 			"initCommands":
 			[	"platform select remote-linux",
 				"platform connect connect://localhost:29935",
@@ -37,7 +37,7 @@
 		{	"name": "swift_service: Attach to Docker",
 			"type": "lldb",
 			"request": "attach",
-			"pid": "${input:swift_service_pid}",
+			"program": ".build/x86_64-unknown-linux-gnu/debug/swift_service", // assuming that the service is running under this name in the container
 			"initCommands":
 			[	"platform select remote-linux",
 				"platform connect connect://localhost:56439",
@@ -48,7 +48,7 @@
 		{	"name": "c_service: Attach to Docker",
 			"type": "lldb",
 			"request": "attach",
-			"pid": "${input:c_service_pid}",
+			"program": "/usr/bin/c_service", // assuming that the service is running under this name in the container
 			"initCommands":
 			[	"platform select remote-linux",
 				"platform connect connect://localhost:54255",
@@ -59,10 +59,10 @@
 		{	"name": "dotnet_service: Attach to Docker",
 			"type": "coreclr",
 			"request": "attach",
-			"processId": "${input:dotnet_service_pid}",
+			"processName": "/usr/src/dotnet_service/bin/Debug/net6.0/dotnet_service", // assuming that the service is running under this name in the container
 			"pipeTransport":
 			{	"pipeProgram": "docker",
-				"pipeArgs": ["exec", "-i", "docker-vscode-debug-example_dotnet_service_1"],
+				"pipeArgs": ["exec", "-i", "docker-vscode-debug-example_dotnet_service_1"], // assuming that the name of the container is "docker-vscode-debug-example_dotnet_service_1"
 				"debuggerPath": "/usr/bin/vsdbg/vsdbg",
 				"pipeCwd": "${workspaceRoot}",
 				"quoteArgs": false
@@ -77,36 +77,6 @@
 			"port": 22742,
 			"localRoot": "${workspaceFolder}/src/python_service",
 			"remoteRoot": "/usr/src/python_service"
-		}
-	],
-	"inputs":
-	[	{	"id": "rust_service_pid",
-			"type": "command",
-			"command": "shellCommand.execute",
-			"args":
-			{	"command": "pidof /usr/bin/rust_service"
-			}
-		},
-		{	"id": "swift_service_pid",
-			"type": "command",
-			"command": "shellCommand.execute",
-			"args":
-			{	"command": "pidof swift_service"
-			}
-		},
-		{	"id": "dotnet_service_pid",
-			"type": "command",
-			"command": "shellCommand.execute",
-			"args":
-			{	"command": "pidof dotnet_service"
-			}
-		},
-		{	"id": "c_service_pid",
-			"type": "command",
-			"command": "shellCommand.execute",
-			"args":
-			{	"command": "pidof c_service"
-			}
 		}
 	]
 }

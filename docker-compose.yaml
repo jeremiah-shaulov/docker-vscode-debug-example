@@ -58,47 +58,40 @@ services:
     build:
       context: .
       dockerfile: ./infra/deno_service/Dockerfile
-    command: run --unstable --allow-net /usr/src/deno_service/main.ts
     restart: always
 
   node_service:
     build:
       context: .
       dockerfile: ./infra/node_service/Dockerfile
-    command: node /usr/src/node_service/main.js
     restart: always
 
   rust_service:
     build:
       context: .
       dockerfile: ./infra/rust_service/Dockerfile
-    command: /usr/bin/rust_service
     restart: always
 
   swift_service:
     build:
       context: .
       dockerfile: ./infra/swift_service/Dockerfile
-    command: /usr/bin/swift_service
     restart: always
 
   c_service:
     build:
       context: .
       dockerfile: ./infra/c_service/Dockerfile
-    command: /usr/bin/c_service
     restart: always
 
   dotnet_service:
     build:
       context: .
       dockerfile: ./infra/dotnet_service/Dockerfile
-    command: dotnet /usr/bin/dotnet_service/dotnet_service.dll
     restart: always
 
   python_service:
     build:
       context: .
       dockerfile: ./infra/python_service/Dockerfile
-    command: python main.py
     restart: always

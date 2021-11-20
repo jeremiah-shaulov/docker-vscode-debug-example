@@ -7,3 +7,5 @@ COPY ./infra/http_service/default.conf /etc/nginx/conf.d/default.conf
 COPY ./src/php_fpm_service /usr/src/php_fpm_service
 RUN chown -R root:root /usr/src/php_fpm_service && \
 	chmod -R 755 /usr/src/php_fpm_service
+
+EXPOSE 80

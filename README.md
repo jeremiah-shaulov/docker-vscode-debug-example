@@ -23,7 +23,6 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
 3. Debugging functionality in VSCode is provided by extensions. You'll need these:
 
-- [Tasks Shell Input](https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input)
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
 - [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)

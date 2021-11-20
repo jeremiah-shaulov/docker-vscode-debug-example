@@ -7,11 +7,8 @@ const server = Deno.listen({transport: 'tcp', hostname: 'deno_service', port: 64
 console.log('Service started on', server.addr);
 
 // 2. Wait for termination request
-Promise.race
-(	[	Deno.signal('SIGINT'),
-		Deno.signal('SIGTERM'),
-	]
-).then(() => server.close());
+Deno.addSignalListener('SIGTERM', () => server.close());
+Deno.addSignalListener('SIGINT', () => server.close());
 
 // 3. Serve incoming connections
 for await (const conn of server)

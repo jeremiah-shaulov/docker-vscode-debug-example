@@ -27,6 +27,13 @@ USER python_service_user
 
 COPY ./src/python_service .
 
+CMD ["python", "-m", "ptvsd", "--host", "0.0.0.0", "--port", "22742", "--multiprocess", "main.py"]
+
+# app service port
+EXPOSE 8497
+# debugger port
+EXPOSE 22742
+
 
 # ------------------------------------------------------------------------------
 # Production image
@@ -38,3 +45,8 @@ WORKDIR /usr/src/python_service
 USER python_service_user
 
 COPY ./src/python_service .
+
+CMD ["python", "main.py"]
+
+# app service port
+EXPOSE 8497

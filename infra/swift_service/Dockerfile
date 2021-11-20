@@ -6,14 +6,13 @@ FROM swift:5.5 as debug
 
 # 1. Install lldb-server, that will be running together with the app.
 RUN apt-get update && \
-	apt-get install -y lldb
+	apt-get install -y --no-install-recommends lldb && \
+	rm -rf /var/lib/apt/lists/*
 
 # 2. App source code will be copied to /usr/src/swift_service for compilation.
 WORKDIR /usr/src/swift_service
 
-# 3. To improve build time, we want to create stub app that will have our Package.swift file,
-#	so it will have the same dependencies.
-#	We want to download the dependencies on this stage.
+# 3. Cache dependencies.
 COPY ./src/swift_service/Package.swift ./
 RUN swift package resolve
 
@@ -23,6 +22,16 @@ COPY ./src/swift_service .
 RUN swift build -c release -Xswiftc -g && \
 	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin
 
+# 5. Run the app + lldb-server in background.
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run"]
+
+# app service port
+EXPOSE 15880
+# lldb-server listens for connections
+EXPOSE 56439
+# lldb-server service port
+EXPOSE 16276
+
 
 # ------------------------------------------------------------------------------
 # Production image
@@ -30,17 +39,29 @@ RUN swift build -c release -Xswiftc -g && \
 
 FROM swift:5.5
 
+# 1. Create user for the service
 RUN addgroup --gid=1355 swift_service_user && \
 	adduser --uid=1355 --gid=1355 --shell /bin/false --system swift_service_user
 
+# 2. App source code will be copied to /usr/src/swift_service for compilation.
+#	Later i'll delete it.
 WORKDIR /usr/src/swift_service
 
+# 3. Cache dependencies.
 COPY ./src/swift_service/Package.swift ./
 RUN swift package resolve
 
+# 4. Copy app source code, and compile it.
+#	Store the resulting binary at /usr/bin/swift_service.
+#	Then delete the source code.
 COPY ./src/swift_service .
 RUN swift build -c release -Xswiftc -g && \
 	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin && \
 	rm -rf /usr/src/swift_service
 
+# 5. How to run the app.
 USER swift_service_user
+CMD ["/usr/bin/swift_service"]
+
+# app service port
+EXPOSE 15880

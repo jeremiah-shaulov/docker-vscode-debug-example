@@ -6,3 +6,4 @@ src/dotnet_service/bin
 src/rust_service/target
 src/rust_service/Cargo.lock
 src/swift_service/Package.resolved
+src/swift_service/.build
