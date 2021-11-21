@@ -63,7 +63,7 @@ EXPOSE 27712
 EXPOSE 9455
 ```
 
-To start out service, we run `java` command with debugger parameters. The Java debugger server will be listening on `*:9455` (default route, port 9455).
+To start our service, we run `java` command with debugger parameters. The Java debugger server will be listening on `*:9455` (default route, port 9455).
 We expose the debugger port to the host machine together with the app service port.
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:

@@ -1,6 +1,6 @@
 # TCP echo service with Deno: About
 
-This is simple asynchronous TCP echo server implemented in Typescript/Deno, to demonstrate how Deno services running in Docker containers can be remote-debugged from host machine.
+This is simple TCP echo server implemented in Typescript/Deno, to demonstrate how Deno services running in Docker containers can be remote-debugged from host machine.
 
 ## How to debug
 
@@ -58,7 +58,7 @@ EXPOSE 64840
 EXPOSE 60220
 ```
 
-To start out service, we run `deno` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:60220` (default route, port 60220).
+To start our service, we run `deno` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:60220` (default route, port 60220).
 We expose the debugger port to the host machine together with the app service port.
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
