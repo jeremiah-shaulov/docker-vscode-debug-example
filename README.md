@@ -2,7 +2,7 @@
 
 This project demonstrates Docker infrastructure with services implemented in various languages, and how to debug these services from host machine using VSCode IDE.
 
-This project shows services implemented in Deno, Rust, Swift, PHP, C#, Node JS, Python, C and Java. Each service is simple TCP echo server.
+This project shows services implemented in Deno, Rust, Swift, PHP, C#, Node JS, Python, C and Java. Each service is a simple TCP echo server.
 
 VSCode debugger can attach to any running service, you can put breakpoints, and inspect variables in runtime.
 
@@ -120,3 +120,17 @@ This project uses list of "well-known" ports for it's services.
 All the port numbers are random (`Math.floor(Math.random() * 0xFFFF)`).
 
 This project is intended to be a good starting point for other projects. If you base your project on this, you'll need to rename services, and ports in all files where they appear.
+
+## About services
+
+Now let's take a closer look to each one of the services.
+
+- [php_fpm_service](./src/php_fpm_service)
+- [deno_service](./src/deno_service)
+- [node_service](./src/node_service)
+- [rust_service](./src/rust_service)
+- [swift_service](./src/swift_service)
+- [c_service](./src/c_service)
+- [dotnet_service](./src/dotnet_service)
+- [java_service](./src/java_service)
+- [python_service](./src/python_service)
