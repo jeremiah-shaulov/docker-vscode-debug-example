@@ -32,7 +32,7 @@ And the execution must stop on the breakpoint.
 
 ## How does it work
 
-[Dockerfile](../../infra/java_service/Dockerfile) for this service looks like this:
+[Dockerfile](../../infra/deno_service/Dockerfile) for this service looks like this:
 
 ```dockerfile
 FROM denoland/deno:debian-1.16.2 as debug

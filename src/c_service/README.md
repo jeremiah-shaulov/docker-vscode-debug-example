@@ -1,47 +1,121 @@
-# TCP echo service with C
+# TCP echo service with C: About
 
 Rock'n'roll, stylish haircuts, cigarette smoke, and C programming language - this is the magic of 1970s.
-Is this joy or pain to create Docker services in C, or maybe both, i don't know, but here is the example of how this can be achieved.
+Is this joy or pain to create Docker services in C, or maybe both, i don't know, but here is the example of one such service.
 
-This directory of the [repository](../../README.md) contains C implementation of simple Docker service.
-This service can comminicate with other services, and it's possible to debug it from host machine with VSCode IDE.
-The debugger can be attached to the process running in the container, and you can stop on breakpoints.
+This is simple asynchronous TCP echo server implemented in C based on `libev`, to demonstrate how C services running in Docker containers can be remote-debugged from host machine.
 
-See main [page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
+## How to debug
 
-In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, i install `lldb-server`:
+See [main page](../../README.md) for how to run this project.
+
+![image: docker-compose](../../readme-assets/docker-compose-up-dev.png)
+
+After `c_service` is started in Docker, you can attach VSCode debugger to the running process.
+
+![image: F5](../../readme-assets/c_service-f5.png)
+
+After you click "Start debugging" or press F5, the debugger will be attached, and you'll see these buttons:
+
+![image: F5 started](../../readme-assets/f5.png)
+
+Put breakpoint to some line of code that works each time a new connection to the service arrives:
+
+![image: breakpoint](../../readme-assets/c_service-breakpoint.png)
+
+Refresh the `http://localhost:8888/` page, or execute:
 
 ```bash
-apt-get install -y lldb
+curl --output - 'http://localhost:8888/'
 ```
 
-`lldb-server` is running in parallel with the application. I run it like this from [Dockerfile](../../infra/c_service/Dockerfile):
+And the execution must stop on the breakpoint.
+
+![image: breakpoint](../../readme-assets/c_service-breakpoint-hit.png)
+
+## How does it work
+
+We need to install a debugger server inside our Docker container, and run it in parallel with the application.
+Then VSCode debugger client (or some `lldb` command line client) will connect to this server, ask it to attach to our application process, and start debugging it.
+
+We can use `gcc` + `gdb`, or `clang` + `lldb`, or maybe even `gcc` + `lldb`.
+I tried to set up `gdb`, and i even could connect to the `gdbserver` from host machine, and debug the application from command line `gdb` client, but i didn't manage to have VSCode debugging.
+Also with `gdbserver` i needed to run the Docker container in `--privileged` mode.
+Maybe there's technique to get this working, and maybe even without `--privileged`, but i finally chose to use `lldb-server` in this tutorial.
+
+[Dockerfile](../../infra/c_service/Dockerfile) for this service looks like this:
 
 ```dockerfile
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"]
-```
-The debugger listens on port `54255`. This port is also mapped to the host machine.
-During communication with debugger client (on host machine), `lldb-server` uses another port - `9850`, and it must be mapped to the host as well.
+# ------------------------------------------------------------------------------
+# Base image to be used by both debug and production
+# ------------------------------------------------------------------------------
 
-Then in [launch.json](../../.vscode/launch.json) the configuration looks like this:
+FROM silkeh/clang:12 as base
+
+# 1. Install libev-dev
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends libev-dev
+
+# 2. App source code will be copied to /usr/src/c_service for compilation.
+#	Later i will delete it.
+WORKDIR /usr/src/c_service
+
+# 3. Copy app source code, and compile the production version.
+#	Store the resulting binary at /usr/bin/c_service, and delete the source code.
+COPY ./src/c_service .
+RUN clang -DNDEBUG -O2 main.c -lev -o /usr/bin/c_service && \
+	rm -r /usr/src/c_service
+
+
+# ------------------------------------------------------------------------------
+# Debug image
+# ------------------------------------------------------------------------------
+
+FROM base as debug
+
+# 1. App source code will be copied to /usr/src/c_service for compilation.
+#	Later i will delete it.
+WORKDIR /usr/src/c_service
+
+# 2. In base image i compiled the production version.
+#	I don't need it here, so do the same for debug version.
+COPY ./src/c_service .
+RUN clang -O0 -g main.c -lev -o /usr/bin/c_service && \
+	rm -r /usr/src/c_service
+
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"]
+
+# app service port
+EXPOSE 8543
+# lldb-server listens for connections
+EXPOSE 54255
+# lldb-server service port
+EXPOSE 9850
+```
+
+First, in base image, i `apt`-install `libev-dev`, and `clang`-compile the application.
+Then in debug image i recompile for debug, and the startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service'`.
+It starts `lldb-server` in parallel with our app service.
+
+We expose 2 debugger ports (54255 and 9850) to the host machine together with the app service port (8543).
+
+In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
 
 ```json
-"configurations":
-[	{	"name": "c_service: Attach to Docker",
-		"type": "lldb",
-		"request": "attach",
-		"program": "/usr/bin/c_service", // assuming that the service is running under this name in the container
-		"initCommands":
-		[	"platform select remote-linux",
-			"platform connect connect://localhost:54255",
-			"settings set target.inherit-env false",
-			"settings set target.source-map /usr/src/c_service ${workspaceFolder}/src/c_service"
-		]
-	}
-]
+{	"name": "c_service: Attach to Docker",
+	"type": "lldb",
+	"request": "attach",
+	"program": "/usr/bin/c_service", // assuming that the service is running under this name in the container
+	"initCommands":
+	[	"platform select remote-linux",
+		"platform connect connect://localhost:54255",
+		"settings set target.inherit-env false",
+		"settings set target.source-map /usr/src/c_service ${workspaceFolder}/src/c_service"
+	]
+}
 ```
 
-So VSCode will connect to `localhost:54255`, which is mapped to `<c_service in docker>:54255` to communicate with the debugger.
+So the debugger client will connect to `localhost:54255`, that is mapped to our service port inside Docker.
 
 It's also possible to debug with `lldb` client installed on your machine, bypassing VSCode, or to run lldb from a Docker image:
 
@@ -50,30 +124,4 @@ It's also possible to debug with `lldb` client installed on your machine, bypass
 docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach --name c_service' -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
 ```
 
-Then inside the `lldb` client you can put a breakpoint on `handle_conn` function:
-
-```
-(lldb) b handle_conn
-```
-
-Then in parallel execute:
-```bash
-curl --output - 'http://localhost:8888/'
-```
-
-This must hang, because the execution is suspended on our `handle_conn` function. See this in `lldb`:
-
-```
-(lldb) l
-   238                  return EXIT_FAILURE;
-   239          }
-   240
-   241          // Bind
-   242          struct sockaddr_in s;
-   243          s.sin_family = AF_INET;
-   244          s.sin_port = htons(PORT);
-   245          s.sin_addr.s_addr = htonl(INADDR_ANY);
-   246          int err = bind(server_fd, (struct sockaddr *)&s, sizeof(s));
-   247          if (err == -1)
-(lldb) r
-```
+![image: lldb cli](../../readme-assets/c_service_lldb_cli.png)
