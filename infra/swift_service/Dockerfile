@@ -4,25 +4,20 @@
 
 FROM swift:5.5 as debug
 
-# 1. Install lldb-server, that will be running together with the app.
-RUN apt-get update && \
-	apt-get install -y --no-install-recommends lldb && \
-	rm -rf /var/lib/apt/lists/*
-
-# 2. App source code will be copied to /usr/src/swift_service for compilation.
+# 1. App source code will be copied to /usr/src/swift_service for compilation.
 WORKDIR /usr/src/swift_service
 
-# 3. Cache dependencies.
+# 2. Cache dependencies.
 COPY ./src/swift_service/Package.swift ./
 RUN swift package resolve
 
-# 4. Copy app source code, and compile it.
+# 3. Copy app source code, and compile it.
 #	Store the resulting binary at /usr/bin/swift_service.
 COPY ./src/swift_service .
 RUN swift build -c release -Xswiftc -g && \
 	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin
 
-# 5. Run the app + lldb-server in background.
+# 4. Run the app + lldb-server in background.
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run"]
 
 # app service port
