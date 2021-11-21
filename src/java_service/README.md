@@ -1,6 +1,6 @@
-## About this service
+## TCP echo service with Java: About
 
-This is simple asynchronous TCP echo server implemented in Java, to demonstrate how Java services running in Docker containers can be debugged from host machine.
+This is simple asynchronous TCP echo server implemented in Java, to demonstrate how Java services running in Docker containers can be remote-debugged from host machine.
 
 Files here were generated like this:
 
@@ -25,10 +25,6 @@ After you click "Start debugging" or press F5, the debugger will be attached, an
 ![image: F5 started](../../readme-assets/f5-with-patch.png)
 
 Put breakpoint to some line of code that works each time a new connection to the service arrives:
-
-```java
-System.out.println("Conn");
-```
 
 ![image: breakpoint](../../readme-assets/java_service-breakpoint.png)
 
@@ -83,7 +79,7 @@ In [launch.json](../../.vscode/launch.json) we have these settings for the VSCod
 }
 ```
 
-So the debugger client will connect to `localhost:9455`, that is mapped to our serice port inside Docker.
+So the debugger client will connect to `localhost:9455`, that is mapped to our service port inside Docker.
 
 `"request": "attach"` tells the debugger to attach to already running process, not to launch a new application.
 
