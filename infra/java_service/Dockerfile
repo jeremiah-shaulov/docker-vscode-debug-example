@@ -14,7 +14,7 @@ RUN mvn -B dependency:go-offline --fail-never
 COPY ./src/java_service .
 RUN mvn -B package
 
-CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,address=*:9455,server=y,suspend=n", "-cp", "target/java_service-1.0-SNAPSHOT.jar", "com.none.java_service.App"]
+CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9455", "-cp", "target/java_service-1.0-SNAPSHOT.jar", "com.none.java_service.App"]
 
 # app service port
 EXPOSE 27712

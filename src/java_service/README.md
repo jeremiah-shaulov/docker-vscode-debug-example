@@ -59,7 +59,7 @@ RUN mvn -B dependency:go-offline --fail-never
 COPY ./src/java_service .
 RUN mvn -B package
 
-CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,address=*:9455,server=y,suspend=n", "-cp", "target/java_service-1.0-SNAPSHOT.jar", "com.none.java_service.App"]
+CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9455", "-cp", "target/java_service-1.0-SNAPSHOT.jar", "com.none.java_service.App"]
 
 # app service port
 EXPOSE 27712
@@ -86,3 +86,8 @@ In [launch.json](../../.vscode/launch.json) we have these settings for the VSCod
 So the debugger client will connect to `localhost:9455`, that is mapped to our serice port inside Docker.
 
 `"request": "attach"` tells the debugger to attach to already running process, not to launch a new application.
+
+## See also
+
+- [Running and debugging Java - Attach](https://code.visualstudio.com/docs/java/java-debugging#_attach)
+- [What are Java command line options to set to allow JVM to be remotely debugged?](https://stackoverflow.com/questions/138511/what-are-java-command-line-options-to-set-to-allow-jvm-to-be-remotely-debugged)
