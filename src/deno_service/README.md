@@ -2,7 +2,7 @@
 
 This little Docker service demonstrates the ability to remote-debug application running in a Docker container from host machine.
 
-See [main page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
+See [main page](../../README.md) for how to run this project. Here i'll explain what the debugging process looks like.
 
 When `dev` version is started, the command that runs inside the container looks like this: (find it in [docker-compose.dev.yaml](../../docker-compose.dev.yaml))
 

@@ -58,7 +58,7 @@ Then inside the `lldb` client you can put a breakpoint on `handle_conn` function
 
 Then in parallel execute:
 ```bash
-curl --output - 'http://l.personyze.com:8888/'
+curl --output - 'http://localhost:8888/'
 ```
 
 This must hang, because the execution is suspended on our `handle_conn` function. See this in `lldb`:

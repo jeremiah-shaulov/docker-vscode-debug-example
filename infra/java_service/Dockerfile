@@ -10,11 +10,15 @@ WORKDIR /usr/src/java_service
 COPY ./src/java_service/pom.xml .
 RUN mvn -B dependency:go-offline --fail-never
 
+# Build
 COPY ./src/java_service .
 RUN mvn -B package
 
 CMD ["java", "-Xdebug", "-Xrunjdwp:transport=dt_socket,address=*:9455,server=y,suspend=n", "-cp", "target/java_service-1.0-SNAPSHOT.jar", "com.none.java_service.App"]
+
+# app service port
 EXPOSE 27712
+# debugger port
 EXPOSE 9455
 
 
@@ -36,4 +40,6 @@ COPY --from=debug /usr/src/java_service/target/java_service-1.0-SNAPSHOT.jar /us
 # 3. How to run the app.
 USER java_service_user
 CMD ["java", "-cp", "/usr/lib/java_service/java_service.jar", "com.none.java_service.App"]
+
+# app service port
 EXPOSE 27712
