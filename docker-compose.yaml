@@ -32,6 +32,9 @@
 #
 # -  7287 - dotnet_service listens on this port.
 #
+# - 27712 - java_service listens on this port.
+# -  9455 - If docker-compose.dev.yaml is enabled, Java debugger on java_service listens to this port. This port appears in ".vscode/launch.json" file.
+#
 # -  8497 - python_service listens on this port.
 # - 22742 - If docker-compose.dev.yaml is enabled, Python debugger on python_service listens to this port. This port appears in ".vscode/launch.json" file.
 #
@@ -88,6 +91,12 @@ services:
     build:
       context: .
       dockerfile: ./infra/dotnet_service/Dockerfile
+    restart: always
+
+  java_service:
+    build:
+      context: .
+      dockerfile: ./infra/java_service/Dockerfile
     restart: always
 
   python_service:

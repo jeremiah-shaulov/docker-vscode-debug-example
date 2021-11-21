@@ -13,6 +13,7 @@ else
 	ask_service('dotnet_service', 7287);
 	ask_service('python_service', 8497);
 	ask_service('c_service', 8543);
+	ask_service('java_service', 27712);
 }
 
 function ask_service($host, $port)

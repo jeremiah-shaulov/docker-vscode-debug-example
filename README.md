@@ -2,7 +2,7 @@
 
 This project demonstrates Docker infrastructure with services implemented in various languages, and how to debug these services from host machine using VSCode IDE.
 
-This project shows services implemented in Deno, Rust, Swift, PHP, C#, Node JS, Python and C. Each service is simple TCP echo server.
+This project shows services implemented in Deno, Rust, Swift, PHP, C#, Node JS, Python, C and Java. Each service is simple TCP echo server.
 
 VSCode debugger can attach to any running service, you can put breakpoints, and inspect variables in runtime.
 
@@ -24,6 +24,7 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 3. Debugging functionality in VSCode is provided by extensions. You'll need these:
 
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+- [Debugger for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-debug)
 - [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
 - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
@@ -48,6 +49,7 @@ This starts 9 docker services:
 - swift_service
 - c_service
 - dotnet_service
+- java_service
 - python_service
 
 You can see the services state by executing:
@@ -112,6 +114,7 @@ This project uses list of "well-known" ports for it's services.
 - swift_service - 15880 (TCP), and 2 ports for debugger server: 56439 and 16276 (lldb-server).
 - c_service - 8543 (TCP), and 2 ports for debugger server: 54255 and 9850 (lldb-server).
 - dotnet_service - 7287 (TCP), and it uses vsdbg debugger. VSCode knows to start the debugger within container, because the container name is assumed to be "docker-vscode-debug-example_dotnet_service_1", and is hardcoded in [.vscode/launch.json](./.vscode/launch.json).
+- java_service - 27712 (TCP), 9455 (debugger, ptvsd)
 - python_service - 8497 (TCP), 22742 (debugger, ptvsd)
 
 All the port numbers are random (`Math.floor(Math.random() * 0xFFFF)`).

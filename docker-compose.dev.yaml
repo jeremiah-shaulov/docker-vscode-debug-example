@@ -64,6 +64,14 @@ services:
       - 7287:7287 # app service port
     restart: "no"
 
+  java_service:
+    build:
+      target: debug
+    ports:
+      - 27712:27712 # app service port
+      - 9455:9455 # debugger port
+    restart: "no"
+
   python_service:
     build:
       target: debug

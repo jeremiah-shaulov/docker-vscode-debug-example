@@ -9,31 +9,19 @@ The debugger can be attached to the process running in the container, and you ca
 
 See main [page](../../README.md) on how to run this project. Here i'll explain what the debugging process looks like.
 
-In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, i install `lldb`:
+In [Dockerfile](../../infra/c_service/Dockerfile) in the section for dev image, i install `lldb-server`:
 
 ```bash
 apt-get install -y lldb
 ```
 
-This package includes `lldb-server` that is running in parallel with the application. I run it like this from [docker-compose.dev.yaml](../../docker-compose.dev.yaml):
+`lldb-server` is running in parallel with the application. I run it like this from [Dockerfile](../../infra/c_service/Dockerfile):
 
 ```dockerfile
-c_service:
-    build:
-      target: debug
-    command: bash -c "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"
-    pid: host
-    ports:
-      - 8543:8543 # app service port
-      - 54255:54255 # lldb-server listens for connections
-      - 9850:9850 # lldb-server service port
-    restart: "no"
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"]
 ```
 The debugger listens on port `54255`. This port is also mapped to the host machine.
 During communication with debugger client (on host machine), `lldb-server` uses another port - `9850`, and it must be mapped to the host as well.
-
-Notice `pid: host` line. This tells docker to share process id namespace with host. With this flag set, host can see processes of the container in it's `/proc` or `ps aux`.
-And also container will see host processes.
 
 Then in [launch.json](../../.vscode/launch.json) the configuration looks like this:
 
@@ -42,7 +30,7 @@ Then in [launch.json](../../.vscode/launch.json) the configuration looks like th
 [	{	"name": "c_service: Attach to Docker",
 		"type": "lldb",
 		"request": "attach",
-		"pid": "${input:c_service_pid}",
+		"program": "/usr/bin/c_service", // assuming that the service is running under this name in the container
 		"initCommands":
 		[	"platform select remote-linux",
 			"platform connect connect://localhost:54255",
@@ -50,30 +38,16 @@ Then in [launch.json](../../.vscode/launch.json) the configuration looks like th
 			"settings set target.source-map /usr/src/c_service ${workspaceFolder}/src/c_service"
 		]
 	}
-],
-"inputs":
-[	{	"id": "c_service_pid",
-		"type": "command",
-		"command": "shellCommand.execute",
-		"args":
-		{	"command": "pidof c_service"
-		}
-	}
 ]
 ```
 
 So VSCode will connect to `localhost:54255`, which is mapped to `<c_service in docker>:54255` to communicate with the debugger.
-Our service is running as `/usr/bin/c_service` executable, and when debugger client connects to the `lldb-server`, it needs to execute attach command, giving it process id.
-When you start debugging, the IDE will execute `pidof c_service` command to determine the process id.
-VSCode supports parameters substitution like `${input:c_service_pid}`. To substitute this, it will look for command called "c_service_pid" in "inputs" part of the `launch.json`.
-Command type "shellCommand.execute" is provided by [Tasks Shell Input](https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input) extension.
-You need to install it.
 
 It's also possible to debug with `lldb` client installed on your machine, bypassing VSCode, or to run lldb from a Docker image:
 
 ```bash
 # from project root directory
-docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach '$(pidof c_service) -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
+docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach --name c_service' -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
 ```
 
 Then inside the `lldb` client you can put a breakpoint on `handle_conn` function:

@@ -71,6 +71,14 @@
 			{	"/usr/src/dotnet_service": "${workspaceRoot}/src/dotnet_service"
 			}
 		},
+		{	"name": "java_service: Attach to Docker",
+			"type": "java",
+			"request": "attach",
+			"hostName": "localhost",
+			"port": 9455,
+			"projectName": "java_service",
+			"sourcePaths": ["${workspaceFolder}/src/java_service/src/main/java"]
+		},
 		{	"name": "python_service: Attach to Docker",
 			"type": "python",
 			"request": "attach",
