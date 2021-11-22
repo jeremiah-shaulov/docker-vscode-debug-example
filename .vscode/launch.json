@@ -37,7 +37,7 @@
 		{	"name": "swift_service: Attach to Docker",
 			"type": "lldb",
 			"request": "attach",
-			"program": ".build/x86_64-unknown-linux-gnu/debug/swift_service", // assuming that the service is running under this name in the container
+			"program": "/usr/bin/swift_service", // assuming that the service is running under this name in the container
 			"initCommands":
 			[	"platform select remote-linux",
 				"platform connect connect://localhost:2418",

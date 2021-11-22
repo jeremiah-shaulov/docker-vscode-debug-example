@@ -45,7 +45,7 @@ For this to work, we need to install `lldb` debugger server inside our Docker co
 [Dockerfile](../../infra/swift_service/Dockerfile) for this service looks like this:
 
 ```dockerfile
-FROM swift:5.5 as debug
+FROM swift:5.5.1 as debug
 
 # 1. App source code will be copied to /usr/src/swift_service for compilation.
 WORKDIR /usr/src/swift_service
@@ -54,14 +54,20 @@ WORKDIR /usr/src/swift_service
 COPY ./src/swift_service/Package.swift ./
 RUN swift package resolve
 
-# 3. Copy app source code, and compile it.
-#	Store the resulting binary at /usr/bin/swift_service.
+# 3. Copy app source code.
 COPY ./src/swift_service .
-RUN swift build -c release -Xswiftc -g && \
-	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin
 
-# 4. Run the app + lldb-server in background.
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & swift run"]
+# 4. Compile 2 versions: debug and release.
+#	Store the debug binary at /usr/bin/swift_service, and the release binary at /usr/bin/swift_service_release.
+# Then delete intemediate build files.
+RUN swift build -Xswiftc -g && \
+	swift build -c release && \
+	mv .build/debug/swift_service /usr/bin/swift_service && \
+	mv .build/release/swift_service /usr/bin/swift_service_release && \
+	rm -rf .build
+
+# 5. Run the app + lldb-server in background.
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & /usr/bin/swift_service"]
 
 # app service port
 EXPOSE 15880

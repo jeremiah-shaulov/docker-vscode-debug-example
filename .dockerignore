@@ -1,0 +1,14 @@
+.vscode/*
+!.vscode/launch.json
+*/**/.vscode
+**/.directory
+src/dotnet_service/obj
+src/dotnet_service/bin
+src/rust_service/target
+src/rust_service/Cargo.lock
+src/swift_service/Package.resolved
+src/swift_service/.build
+src/java_service/target
+src/java_service/.settings
+src/java_service/.classpath
+src/java_service/.project
