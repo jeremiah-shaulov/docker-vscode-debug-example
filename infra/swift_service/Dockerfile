@@ -16,7 +16,7 @@ COPY ./src/swift_service .
 
 # 4. Compile 2 versions: debug and release.
 #	Store the debug binary at /usr/bin/swift_service, and the release binary at /usr/bin/swift_service_release.
-# Then delete intemediate build files.
+#	Then delete intemediate build files.
 RUN swift build -Xswiftc -g && \
 	swift build -c release && \
 	mv .build/debug/swift_service /usr/bin/swift_service && \

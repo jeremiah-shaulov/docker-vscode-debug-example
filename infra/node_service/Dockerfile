@@ -14,8 +14,9 @@ COPY ./src/node_service .
 RUN chown -R root:node . && \
 	chmod -R 750 .
 
+WORKDIR /usr/src/node_service
 USER node
-CMD ["node", "--inspect=0.0.0.0:8548", "/usr/src/node_service/main.js"]
+CMD ["node", "--inspect=0.0.0.0:8548", "main.js"]
 
 # app service port
 EXPOSE 12982
@@ -29,8 +30,9 @@ EXPOSE 8548
 
 FROM debug
 
+WORKDIR /usr/src/node_service
 USER node
-CMD ["node", "/usr/src/node_service/main.js"]
+CMD ["node", "main.js"]
 
 # app service port
 EXPOSE 12982
