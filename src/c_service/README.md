@@ -83,21 +83,21 @@ COPY ./src/c_service .
 RUN clang -O0 -g main.c -lev -o /usr/bin/c_service && \
 	rm -r /usr/src/c_service
 
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"]
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2201 --gdbserver-port 9850 & /usr/bin/c_service"]
 
 # app service port
 EXPOSE 8543
 # lldb-server listens for connections
-EXPOSE 54255
+EXPOSE 2201
 # lldb-server service port
 EXPOSE 9850
 ```
 
 First, in base image, i `apt`-install `libev-dev`, and `clang`-compile the application.
-Then in debug image i recompile for debug, and the startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service'`.
+Then in debug image i recompile for debug, and the startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:2201 --gdbserver-port 9850 & /usr/bin/c_service'`.
 It starts `lldb-server` in parallel with our app service.
 
-We expose 2 debugger ports (54255 and 9850) to the host machine together with the app service port (8543).
+We expose 2 debugger ports (2201 and 9850) to the host machine together with the app service port (8543).
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
 
@@ -108,20 +108,20 @@ In [launch.json](../../.vscode/launch.json) we have these settings for the VSCod
 	"program": "/usr/bin/c_service", // assuming that the service is running under this name in the container
 	"initCommands":
 	[	"platform select remote-linux",
-		"platform connect connect://localhost:54255",
+		"platform connect connect://localhost:2201",
 		"settings set target.inherit-env false",
 		"settings set target.source-map /usr/src/c_service ${workspaceFolder}/src/c_service"
 	]
 }
 ```
 
-So the debugger client will connect to `localhost:54255`, that is mapped to our service port inside Docker.
+So the debugger client will connect to `localhost:2201`, that is mapped to our service port inside Docker.
 
 It's also possible to debug with `lldb` client installed on your machine, bypassing VSCode, or to run lldb from a Docker image:
 
 ```bash
 # from project root directory
-docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:54255' -o 'attach --name c_service' -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
+docker run -it --rm --network=host --pid=host -v "$PWD:$PWD" silkeh/clang:12 lldb -o 'platform select remote-linux' -o 'platform connect connect://localhost:2201' -o 'attach --name c_service' -o "settings set target.source-map /usr/src/c_service $PWD/src/c_service"
 ```
 
 ![image: lldb cli](../../readme-assets/c_service_lldb_cli.png)

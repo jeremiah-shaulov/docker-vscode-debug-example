@@ -18,8 +18,8 @@ services:
     build:
       target: debug
     ports:
-      - 64840:64840 # app service port
-      - 60220:60220 # debugger port
+      - 5090:5090 # app service port
+      - 48050:48050 # debugger port
     restart: "no"
 
   node_service:
@@ -34,7 +34,7 @@ services:
     build:
       target: debug
     ports:
-      - 54329:54329 # app service port
+      - 9023:9023 # app service port
       - 29935:29935 # lldb-server listens for connections
       - 18088:18088 # lldb-server service port
     restart: "no"
@@ -44,7 +44,7 @@ services:
       target: debug
     ports:
       - 15880:15880 # app service port
-      - 56439:56439 # lldb-server listens for connections
+      - 2418:2418 # lldb-server listens for connections
       - 16276:16276 # lldb-server service port
     restart: "no"
 
@@ -53,7 +53,7 @@ services:
       target: debug
     ports:
       - 8543:8543 # app service port
-      - 54255:54255 # lldb-server listens for connections
+      - 2201:2201 # lldb-server listens for connections
       - 9850:9850 # lldb-server service port
     restart: "no"
 

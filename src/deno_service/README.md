@@ -50,15 +50,15 @@ RUN chown -R root:deno /usr/src/deno_service && \
 	chmod -R 750 /usr/src/deno_service
 
 USER deno
-CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:60220", "/usr/src/deno_service/main.ts"]
+CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "/usr/src/deno_service/main.ts"]
 
 # app service port
-EXPOSE 64840
+EXPOSE 5090
 # debugger port
-EXPOSE 60220
+EXPOSE 48050
 ```
 
-To start our service, we run `deno` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:60220` (default route, port 60220).
+To start our service, we run `deno` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:48050` (default route, port 48050).
 We expose the debugger port to the host machine together with the app service port.
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
@@ -67,10 +67,10 @@ In [launch.json](../../.vscode/launch.json) we have these settings for the VSCod
 {	"name": "deno_service: Attach to Docker",
 	"type": "pwa-node",
 	"request": "attach",
-	"port": 60220,
+	"port": 48050,
 	"localRoot": "${workspaceFolder}/src/deno_service",
 	"remoteRoot": "/usr/src/deno_service"
 }
 ```
 
-So the debugger client will connect to `localhost:60220`, that is mapped to our service port inside Docker.
+So the debugger client will connect to `localhost:48050`, that is mapped to our service port inside Docker.

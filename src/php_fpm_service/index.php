@@ -6,9 +6,9 @@ if (isset($_GET['info']))
 else
 {	echo "<div>Hi, i'm php_fpm_service</div>";
 
-	ask_service('deno_service', 64840);
+	ask_service('deno_service', 5090);
 	ask_service('node_service', 12982);
-	ask_service('rust_service', 54329);
+	ask_service('rust_service', 9023);
 	ask_service('swift_service', 15880);
 	ask_service('dotnet_service', 7287);
 	ask_service('python_service', 8497);

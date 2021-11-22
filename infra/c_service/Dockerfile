@@ -35,12 +35,12 @@ COPY ./src/c_service .
 RUN clang -O0 -g main.c -lev -o /usr/bin/c_service && \
 	rm -r /usr/src/c_service
 
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:54255 --gdbserver-port 9850 & /usr/bin/c_service"]
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2201 --gdbserver-port 9850 & /usr/bin/c_service"]
 
 # app service port
 EXPOSE 8543
 # lldb-server listens for connections
-EXPOSE 54255
+EXPOSE 2201
 # lldb-server service port
 EXPOSE 9850
 

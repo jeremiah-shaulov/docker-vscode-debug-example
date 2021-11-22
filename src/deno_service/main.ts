@@ -3,7 +3,7 @@ import {writeAll} from './private/deps.ts';
 const encoder = new TextEncoder;
 
 // 1. Start server
-const server = Deno.listen({transport: 'tcp', hostname: 'deno_service', port: 64840});
+const server = Deno.listen({transport: 'tcp', hostname: 'deno_service', port: 5090});
 console.log('Service started on', server.addr);
 
 // 2. Wait for termination request

@@ -108,16 +108,16 @@ This project uses list of "well-known" ports for it's services.
 
 - http_service - ${HTTP_PORT} (HTTP).
 - php_fpm_service - 21104 (FastCGI), and it connects to "host.docker.internal:33078". Docker containers can reach host machine by the "host.docker.internal" hostname. php_fpm_service assumes that PHP debugger (XDebug) is listening on "host.docker.internal:33078". It will listen when you select corresponding debug configuration, and press F5.
-- deno_service - 64840 (TCP), and 60220 (debugger server, Chrome Debugging Protocol). VSCode will connect to this port when you select corresponding debug configuration, and press F5.
+- deno_service - 5090 (TCP), and 48050 (debugger server, Chrome Debugging Protocol). VSCode will connect to this port when you select corresponding debug configuration, and press F5.
 - node_service - 12982 (TCP), and 8548 (debugger server, Chrome Debugging Protocol).
-- rust_service - 54329 (TCP), and 2 ports for debugger server: 29935 and 18088 (lldb-server).
-- swift_service - 15880 (TCP), and 2 ports for debugger server: 56439 and 16276 (lldb-server).
-- c_service - 8543 (TCP), and 2 ports for debugger server: 54255 and 9850 (lldb-server).
+- rust_service - 9023 (TCP), and 2 ports for debugger server: 29935 and 18088 (lldb-server).
+- swift_service - 15880 (TCP), and 2 ports for debugger server: 2418 and 16276 (lldb-server).
+- c_service - 8543 (TCP), and 2 ports for debugger server: 2201 and 9850 (lldb-server).
 - dotnet_service - 7287 (TCP), and it uses vsdbg debugger. VSCode knows to start the debugger within container, because the container name is assumed to be "docker-vscode-debug-example_dotnet_service_1", and is hardcoded in [.vscode/launch.json](./.vscode/launch.json).
 - java_service - 27712 (TCP), 9455 (debugger, ptvsd)
 - python_service - 8497 (TCP), 22742 (debugger, ptvsd)
 
-All the port numbers are random (`Math.floor(Math.random() * 0xFFFF)`).
+All the port numbers are random (`Math.floor(Math.random() * 0xBFFF)`).
 
 This project is intended to be a good starting point for other projects. If you base your project on this, you'll need to rename services, and ports in all files where they appear.
 

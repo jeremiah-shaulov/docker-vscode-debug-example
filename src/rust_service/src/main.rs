@@ -1,7 +1,7 @@
 use tokio::net::{TcpListener, TcpStream};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
-const LISTEN: &str = "rust_service:54329";
+const LISTEN: &str = "rust_service:9023";
 const BUFFER_SIZE: usize = 1024;
 
 #[tokio::main]

@@ -18,12 +18,12 @@ RUN swift build -c release -Xswiftc -g && \
 	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin
 
 # 4. Run the app + lldb-server in background.
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run"]
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & swift run"]
 
 # app service port
 EXPOSE 15880
 # lldb-server listens for connections
-EXPOSE 56439
+EXPOSE 2418
 # lldb-server service port
 EXPOSE 16276
 

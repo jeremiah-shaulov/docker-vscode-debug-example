@@ -32,7 +32,7 @@ RUN cargo build && \
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service"]
 
 # app service port
-EXPOSE 54329
+EXPOSE 9023
 # lldb-server listens for connections
 EXPOSE 29935
 # lldb-server service port
@@ -72,4 +72,4 @@ USER rust_service_user
 CMD ["/usr/bin/rust_service"]
 
 # app service port
-EXPOSE 54329
+EXPOSE 9023

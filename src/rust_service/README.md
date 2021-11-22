@@ -75,7 +75,7 @@ RUN cargo build && \
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service"]
 
 # app service port
-EXPOSE 54329
+EXPOSE 9023
 # lldb-server listens for connections
 EXPOSE 29935
 # lldb-server service port
@@ -86,7 +86,7 @@ First i `apt`-install `lldb` package, that also includes `lldb-server`.
 Then the application is compiled, and the startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service'`.
 It starts `lldb-server` that is listening on `0.0.0.0:29935`, and also our app service in parallel.
 
-We expose 2 debugger ports (29935 and 18088) to the host machine together with the app service port (54329).
+We expose 2 debugger ports (29935 and 18088) to the host machine together with the app service port (9023).
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
 

@@ -17,12 +17,12 @@ RUN chown -R root:deno /usr/src/deno_service && \
 	chmod -R 750 /usr/src/deno_service
 
 USER deno
-CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:60220", "/usr/src/deno_service/main.ts"]
+CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "/usr/src/deno_service/main.ts"]
 
 # app service port
-EXPOSE 64840
+EXPOSE 5090
 # debugger port
-EXPOSE 60220
+EXPOSE 48050
 
 
 # ------------------------------------------------------------------------------
@@ -38,4 +38,4 @@ USER 1993
 CMD ["run", "--unstable", "--allow-net", "/usr/src/deno_service/main.ts"]
 
 # app service port
-EXPOSE 64840
+EXPOSE 5090

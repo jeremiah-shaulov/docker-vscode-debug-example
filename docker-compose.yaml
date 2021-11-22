@@ -12,22 +12,22 @@
 # - 21104 - php_fpm_service listens on this port (FastCGI protocol).
 # - 33078 - If docker-compose.dev.yaml is enabled, PHP debugger on php_fpm_service connects to such port on host machine (host.docker.internal). This port appears in ".vscode/launch.json" file.
 #
-# - 64840 - deno_service listens on this port.
-# - 60220 - If docker-compose.dev.yaml is enabled, Javascript debugger on deno_service listens to this port. This port appears in ".vscode/launch.json" file.
+# -  5090 - deno_service listens on this port.
+# - 48050 - If docker-compose.dev.yaml is enabled, Javascript debugger on deno_service listens to this port. This port appears in ".vscode/launch.json" file.
 #
 # - 12982 - node_service listens on this port.
 # -  8548 - If docker-compose.dev.yaml is enabled, Javascript debugger on node_service listens to this port. This port appears in ".vscode/launch.json" file.
 #
-# - 54329 - rust_service listens on this port.
+# - 9023 - rust_service listens on this port.
 # - 29935 - If docker-compose.dev.yaml is enabled, Rust debugger (lldb) on rust_service listens to this port. This port appears in ".vscode/launch.json" file.
 # - 18088 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on rust_service.
 #
 # - 15880 - swift_service listens on this port.
-# - 56439 - If docker-compose.dev.yaml is enabled, Swift debugger (lldb) on swift_service listens to this port. This port appears in ".vscode/launch.json" file.
+# -  2418 - If docker-compose.dev.yaml is enabled, Swift debugger (lldb) on swift_service listens to this port. This port appears in ".vscode/launch.json" file.
 # - 16276 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on swift_service.
 #
 # -  8543 - c_service listens on this port.
-# - 54255 - If docker-compose.dev.yaml is enabled, C debugger (lldb) on c_service listens to this port. This port appears in ".vscode/launch.json" file.
+# -  2201 - If docker-compose.dev.yaml is enabled, C debugger (lldb) on c_service listens to this port. This port appears in ".vscode/launch.json" file.
 # -  9850 - If docker-compose.dev.yaml is enabled, this port is used as service port by lldb on c_service.
 #
 # -  7287 - dotnet_service listens on this port.

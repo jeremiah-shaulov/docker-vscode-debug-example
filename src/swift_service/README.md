@@ -61,20 +61,20 @@ RUN swift build -c release -Xswiftc -g && \
 	mv .build/x86_64-unknown-linux-gnu/release/swift_service -t /usr/bin
 
 # 4. Run the app + lldb-server in background.
-CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run"]
+CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & swift run"]
 
 # app service port
 EXPOSE 15880
 # lldb-server listens for connections
-EXPOSE 56439
+EXPOSE 2418
 # lldb-server service port
 EXPOSE 16276
 ```
 
-The startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:56439 --gdbserver-port 16276 & swift run'`.
-It starts `lldb-server` that is listening on `0.0.0.0:56439`, and also our app service in parallel.
+The startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & swift run'`.
+It starts `lldb-server` that is listening on `0.0.0.0:2418`, and also our app service in parallel.
 
-We expose 2 debugger ports (56439 and 16276) to the host machine together with the app service port (15880).
+We expose 2 debugger ports (2418 and 16276) to the host machine together with the app service port (15880).
 
 In [launch.json](../../.vscode/launch.json) we have these settings for the VSCode debugger:
 
@@ -85,11 +85,11 @@ In [launch.json](../../.vscode/launch.json) we have these settings for the VSCod
 	"program": ".build/x86_64-unknown-linux-gnu/debug/swift_service", // assuming that the service is running under this name in the container
 	"initCommands":
 	[	"platform select remote-linux",
-		"platform connect connect://localhost:56439",
+		"platform connect connect://localhost:2418",
 		"settings set target.inherit-env false",
 		"settings set target.source-map /usr/src/swift_service ${workspaceFolder}/src/swift_service"
 	]
 }
 ```
 
-So the debugger client will connect to `localhost:56439`, that is mapped to our service port inside Docker.
+So the debugger client will connect to `localhost:2418`, that is mapped to our service port inside Docker.

@@ -2,6 +2,7 @@ import {createServer} from 'net';
 
 createServer({allowHalfOpen: true}).on('connection', handleConn).listen
 (	12982,
+	'node_service',
 	function()
 	{	console.log('Service started on', this.address());
 	}
@@ -9,12 +10,7 @@ createServer({allowHalfOpen: true}).on('connection', handleConn).listen
 
 function handleConn(conn)
 {	console.log('Conn');
-	conn.on
-	(	'data',
-		data =>
-		{	conn.write(data);
-		}
-	).once
+	conn.once
 	(	'end',
 		() =>
 		{	conn.end(`Bye\n`);
@@ -24,5 +20,7 @@ function handleConn(conn)
 		error =>
 		{	console.error(error);
 		}
-	).write(`Hi, i'm node_service\n`);
+	);
+	conn.write(`Hi, i'm node_service\n`);
+	conn.pipe(conn);
 }
