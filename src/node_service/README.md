@@ -40,15 +40,16 @@ FROM node:17.1.0-alpine3.14 as debug
 WORKDIR  /usr/src/node_service
 
 # Cache dependencies
-COPY ./src/node_service/package.json ./package.json
+COPY --chown=root:root ./src/node_service/package.json ./package.json
 RUN npm install
 
-COPY ./src/node_service .
+COPY --chown=root:root ./src/node_service .
 RUN chown -R root:node . && \
 	chmod -R 750 .
 
+WORKDIR /usr/src/node_service
 USER node
-CMD ["node", "--inspect=0.0.0.0:8548", "/usr/src/node_service/main.js"]
+CMD ["node", "--inspect=0.0.0.0:8548", "main.js"]
 
 # app service port
 EXPOSE 12982

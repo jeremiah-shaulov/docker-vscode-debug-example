@@ -38,7 +38,7 @@ RUN addgroup --gid=1654 dotnet_service_user && \
 	adduser --uid=1654 --gid=1654 --shell /bin/false --system dotnet_service_user
 
 # Previous image already compiled release version for me, so copy it
-COPY --from=debug /usr/bin/dotnet_service /usr/bin/dotnet_service
+COPY --from=debug --chown=root:root /usr/bin/dotnet_service /usr/bin/dotnet_service
 
 USER dotnet_service_user
 CMD ["dotnet", "/usr/bin/dotnet_service/dotnet_service.dll"]

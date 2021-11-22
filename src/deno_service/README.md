@@ -49,8 +49,9 @@ COPY ./src/deno_service /usr/src/deno_service
 RUN chown -R root:deno /usr/src/deno_service && \
 	chmod -R 750 /usr/src/deno_service
 
+WORKDIR /usr/src/deno_service
 USER deno
-CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "/usr/src/deno_service/main.ts"]
+CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "main.ts"]
 
 # app service port
 EXPOSE 5090
