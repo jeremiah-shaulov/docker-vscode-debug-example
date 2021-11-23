@@ -37,6 +37,7 @@ RUN chown -R root:php_fpm_service_user /usr/src && \
 	chmod -R 750 /usr/src
 
 USER php_fpm_service_user
+EXPOSE 21104
 
 
 # ------------------------------------------------------------------------------
@@ -51,3 +52,4 @@ RUN chown -R root:php_fpm_service_user /usr/src && \
 	chmod -R 750 /usr/src
 
 USER php_fpm_service_user
+EXPOSE 21104
