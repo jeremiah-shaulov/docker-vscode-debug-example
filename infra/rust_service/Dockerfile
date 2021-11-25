@@ -13,6 +13,7 @@ RUN addgroup --gid=1030 rust_service_user && \
 # 2. Install lldb-server, that will be running together with the app.
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends lldb && \
+	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
 # 3. App source code will be copied to /usr/src/rust_service for compilation.

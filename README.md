@@ -33,7 +33,7 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 Debugging will only work in dev. To start dev, `cd` to the directory where you cloned the project, and:
 
 ```bash
-HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build --remove-orphans
+HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
 ```
 
 Change HTTP_PORT if needed.
@@ -61,7 +61,7 @@ docker ps --all
 If you want to start the same services in production mode (slimmer images, faster execution, and impossible debugging), then run `docker-compose up` like this:
 
 ```bash
-HTTP_PORT=8888 docker-compose up -d --build --remove-orphans
+HTTP_PORT=8888 docker-compose up -d --build
 ```
 
 But in this article, i always assume that you're running in dev mode.
@@ -82,18 +82,11 @@ In launch tab of VSCode, select configuration called `deno_service: Attach to Do
 Refresh the `http://localhost:8888/` page.
 The debugger must stop at that breakpoint.
 
-7. To stop all the services do:
+7. To stop all the services and delete containers do:
 
 ```bash
 # from the project directory
-docker-compose stop
-```
-
-Then you may want to remove the containers and images:
-
-```bash
-docker container prune
-docker image prune
+docker-compose down
 ```
 
 ## Services architecture

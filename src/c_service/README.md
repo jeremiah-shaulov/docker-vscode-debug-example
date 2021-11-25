@@ -54,7 +54,9 @@ RUN addgroup --gid=1969 c_service_user && \
 
 # 1. Install libev-dev
 RUN apt-get update && \
-	apt-get install -y --no-install-recommends libev-dev
+	apt-get install -y --no-install-recommends libev-dev && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 # 2. App source code will be copied to /usr/src/c_service for compilation.
 #	Later i will delete it.

@@ -48,6 +48,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 as debug
 # Install vsdbg (dotnet debugger).
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends unzip && \
+	apt-get clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l /usr/bin/vsdbg
 

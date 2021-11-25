@@ -35,8 +35,9 @@ int server_fd;
 // ---------------------------------------------
 // Declare async_recv().
 //
-// This function calls recv(fd, buffer, buffer_len), and when the result is ready, it call the given callback function.
+// This function calls recv(fd, buffer, buffer_len), and when the result is ready, it calls the given callback function.
 // The callback will receive `cb_arg` and integer result, that indicates how many bytes were received.
+// If `result` is 0, this means that EOF reached.
 // If `result` is -1, this means that error occured.
 // ---------------------------------------------
 
@@ -50,7 +51,7 @@ struct async_recv_t
 	void *cb_arg;
 };
 static void async_recv_sub(struct ev_loop *loop, ev_io *io, int revents)
-{	struct async_recv_t* priv = (struct async_recv_t*) io; // it was not just address of ev_io, but of async_recv_t (see above)
+{	struct async_recv_t* priv = (struct async_recv_t *)io; // it was not just address of ev_io, but of async_recv_t (see above)
 
 	ev_io_stop(loop, io);
 
@@ -73,7 +74,7 @@ void async_recv(struct ev_loop *loop, int fd, char *buffer, int buffer_len, asyn
 // ---------------------------------------------
 // Declare async_send().
 //
-// This function calls send(fd, data, data_len), and when all the bytes were sent, or error occured, it call the given callback function.
+// This function calls send(fd, data, data_len), and when all the bytes were sent, or error occured, it calls the given callback function.
 // The callback will receive `cb_arg` and integer result.
 // If `result` is -1, this means that error occured. Other values for `result` are meaningless.
 // ---------------------------------------------
@@ -88,7 +89,7 @@ struct async_send_t
 	void *cb_arg;
 };
 static void async_send_sub(struct ev_loop *loop, ev_io *io, int revents)
-{	struct async_send_t* priv = (struct async_send_t*) io; // it was not just address of ev_io, but of async_send_t (see above)
+{	struct async_send_t* priv = (struct async_send_t *)io; // it was not just address of ev_io, but of async_send_t (see above)
 
 	int sent_len = send(priv->fd, priv->data, priv->data_len, 0);
 	if (sent_len < priv->data_len && sent_len >= 0)
@@ -155,7 +156,7 @@ void handle_conn(struct client_t *client, int result)
 		}
 		case CLIENT_STATE_AFTER_SEND:
 		{	if (result != -1)
-			{	// Send data
+			{	// Sent data successfully
 				async_recv(client->loop, client->fd, client->buffer, BUFFER_SIZE, (async_cb)handle_conn, client);
 				client->state = CLIENT_STATE_AFTER_RECV;
 			}
