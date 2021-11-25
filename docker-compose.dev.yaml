@@ -9,7 +9,7 @@ services:
     build:
       target: debug
     volumes:
-      - ./src/php_fpm_service:/usr/src/php_fpm_service
+      - ./src/php_fpm_service:/usr/src/php_fpm_service # mount source, so it's possible to modify it without restarting the service
     extra_hosts:
       - host.docker.internal:host-gateway # for xdebug
     restart: "no"
@@ -17,6 +17,8 @@ services:
   deno_service:
     build:
       target: debug
+    volumes:
+      - ./src/deno_service:/usr/src/deno_service # mount source, so it's possible to modify it and restart this service without rebuilding the image: `docker restart docker-vscode-debug-example_deno_service_1`
     ports:
       - 5090:5090 # app service port
       - 48050:48050 # debugger port
@@ -25,6 +27,8 @@ services:
   node_service:
     build:
       target: debug
+    volumes:
+      - ./src/node_service:/usr/src/node_service # mount source, so it's possible to modify it and restart this service without rebuilding the image: `docker restart docker-vscode-debug-example_node_service_1`
     ports:
       - 12982:12982 # app service port
       - 8548:8548 # debugger port
@@ -75,6 +79,8 @@ services:
   python_service:
     build:
       target: debug
+    volumes:
+      - ./src/python_service:/usr/src/python_service # mount source, so it's possible to modify it and restart this service without rebuilding the image: `docker restart docker-vscode-debug-example_python_service_1`
     ports:
       - 8497:8497 # app service port
       - 22742:22742 # debugger port
