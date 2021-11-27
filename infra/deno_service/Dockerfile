@@ -11,12 +11,16 @@ RUN deno cache --unstable /tmp/deps.ts
 USER root
 RUN rm /tmp/deps.ts
 
-# 2. Copy the app
-COPY ./src/deno_service /usr/src/deno_service
-RUN chown -R root:deno /usr/src/deno_service && \
-	chmod -R 750 /usr/src/deno_service
-
+# 2. Source code will be copied to here.
 WORKDIR /usr/src/deno_service
+
+# 3. Copy the app
+COPY ./src/deno_service .
+RUN chown -R root:deno . && \
+	chmod -R 750 . && \
+	deno cache --unstable main.ts && \
+	find . -name '*.test.ts' | xargs --no-run-if-empty deno cache --unstable
+
 USER deno
 CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "main.ts"]
 
