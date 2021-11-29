@@ -38,10 +38,10 @@ And the execution must stop on the breakpoint.
 We need to install a debugger server inside our Docker container, and run it in parallel with the application.
 Then VSCode debugger client (or some `lldb` command line client) will connect to this server, ask it to attach to our application process, and start debugging it.
 
-We can use `gcc` + `gdb`, or `clang` + `lldb`, or maybe even `gcc` + `lldb`.
-I tried to set up `gdb`, and i even could connect to the `gdbserver` from host machine, and debug the application from command line `gdb` client, but i didn't manage to have VSCode debugging.
-Also with `gdbserver` i needed to run the Docker container in `--privileged` mode.
-Maybe there's technique to get this working, and maybe even without `--privileged`, but i finally chose to use `lldb-server` in this tutorial.
+We can use `gcc` + `gdb`, or `clang` + `lldb`.
+In this project i use `clang`.
+
+Note that the container is running in `--privileged` mode. Without this, the debugger client shows "Operation not permitted" error.
 
 [Dockerfile](../../infra/c_service/Dockerfile) for this service looks like this:
 

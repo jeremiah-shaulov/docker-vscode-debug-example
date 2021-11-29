@@ -42,6 +42,7 @@ services:
       - 29935:29935 # lldb-server listens for connections
       - 18088:18088 # lldb-server service port
     restart: "no"
+    privileged: true
 
   swift_service:
     build:
@@ -51,6 +52,7 @@ services:
       - 2418:2418 # lldb-server listens for connections
       - 16276:16276 # lldb-server service port
     restart: "no"
+    privileged: true
 
   c_service:
     build:
@@ -60,6 +62,7 @@ services:
       - 2201:2201 # lldb-server listens for connections
       - 9850:9850 # lldb-server service port
     restart: "no"
+    privileged: true
 
   dotnet_service:
     build:
