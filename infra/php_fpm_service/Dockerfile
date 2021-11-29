@@ -32,9 +32,7 @@ RUN pecl install xdebug && \
 COPY ./infra/php_fpm_service/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # 2. Copy the app
-COPY ./src/php_fpm_service /usr/src/php_fpm_service
-RUN chown -R root:php_fpm_service_user /usr/src && \
-	chmod -R 750 /usr/src
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service /usr/src/php_fpm_service
 
 USER php_fpm_service_user
 EXPOSE 21104
@@ -47,9 +45,7 @@ EXPOSE 21104
 FROM base
 
 # Copy the app
-COPY ./src/php_fpm_service /usr/src/php_fpm_service
-RUN chown -R root:php_fpm_service_user /usr/src && \
-	chmod -R 750 /usr/src
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service /usr/src/php_fpm_service
 
 USER php_fpm_service_user
 EXPOSE 21104

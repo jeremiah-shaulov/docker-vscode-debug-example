@@ -44,13 +44,17 @@ RUN deno cache --unstable /tmp/deps.ts
 USER root
 RUN rm /tmp/deps.ts
 
-# 2. Copy the app
-COPY ./src/deno_service /usr/src/deno_service
-RUN chown -R root:deno /usr/src/deno_service && \
-	chmod -R 750 /usr/src/deno_service
-
+# 2. Source code will be copied to here.
 WORKDIR /usr/src/deno_service
+
+# 3. Copy the app
+COPY --chown=root:root ./src/deno_service .
+
+# 4. On first run deno checks source files. I want to check them only once at build time.
 USER deno
+RUN deno cache --unstable main.ts && \
+	find . -name '*.test.ts' | xargs --no-run-if-empty deno cache --unstable
+
 CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "main.ts"]
 
 # app service port

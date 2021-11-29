@@ -44,8 +44,6 @@ COPY --chown=root:root ./src/node_service/package.json ./package.json
 RUN npm install
 
 COPY --chown=root:root ./src/node_service .
-RUN chown -R root:node . && \
-	chmod -R 750 .
 
 WORKDIR /usr/src/node_service
 USER node
