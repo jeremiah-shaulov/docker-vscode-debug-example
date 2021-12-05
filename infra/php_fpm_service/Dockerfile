@@ -10,6 +10,11 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 # 2. Install composer
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+# Composer wants `unzip`
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends unzip && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 # 3. Create user for this service
 RUN groupadd -g 1000 php_fpm_service_user && \
