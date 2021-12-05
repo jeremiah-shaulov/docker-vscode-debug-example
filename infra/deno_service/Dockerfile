@@ -4,21 +4,18 @@
 
 FROM denoland/deno:debian-1.16.2 as debug
 
-# 1. To improve build time, copy deps.ts, and cache the app dependencies.
-USER deno
-COPY ./src/deno_service/private/deps.ts /tmp/deps.ts
-RUN deno cache --unstable /tmp/deps.ts
-USER root
-RUN rm /tmp/deps.ts
-
-# 2. Source code will be copied to here.
+# 1. Source code will be copied to here.
 WORKDIR /usr/src/deno_service
 
-# 3. Copy the app
-COPY --chown=root:root ./src/deno_service .
-
-# 4. On first run deno checks source files. I want to check them only once at build time.
+# 2. Run from this user.
 USER deno
+
+# 3. To improve build time, copy deps.ts, and cache the app dependencies.
+COPY --chown=root:root ./src/deno_service/private/deps.ts ./private/deps.ts
+RUN deno cache --unstable ./private/deps.ts
+
+# 4. Copy the app and cache it. Also cache all *.test.ts files if such are found.
+COPY --chown=root:root ./src/deno_service .
 RUN deno cache --unstable main.ts && \
 	find . -name '*.test.ts' | xargs --no-run-if-empty deno cache --unstable
 

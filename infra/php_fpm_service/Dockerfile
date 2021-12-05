@@ -8,15 +8,18 @@ FROM php:8.0-fpm as base
 #	Here i install pdo_mysql (for demonstration purposes, i'll not be using it)
 RUN docker-php-ext-install pdo pdo_mysql
 
-# 2. Create user for this service
+# 2. Install composer
+COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+
+# 3. Create user for this service
 RUN groupadd -g 1000 php_fpm_service_user && \
 	useradd -u 1000 -g php_fpm_service_user -s /bin/false php_fpm_service_user
 
-# 3. Delete default config
+# 4. Delete default config, and don't use default port 9000
 RUN rm /usr/local/etc/php-fpm.d/www.conf.default && \
 	sed --regexp-extended -e 's/listen\s*=\s*9000//g' -i /usr/local/etc/php-fpm.d/zz-docker.conf
 
-# 4. Copy my version of www.conf
+# 5. Copy my version of www.conf
 COPY ./infra/php_fpm_service/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 
@@ -31,8 +34,17 @@ RUN pecl install xdebug && \
 	docker-php-ext-enable xdebug
 COPY ./infra/php_fpm_service/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-# 2. Copy the app
-COPY --chown=root:php_fpm_service_user ./src/php_fpm_service /usr/src/php_fpm_service
+# 2. Workdir
+WORKDIR /usr/src/php_fpm_service
+
+# 3. Install dependencies
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service/composer.json ./composer.json
+RUN composer update && \
+	mv vendor -t /tmp
+
+# 4. Copy the app
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service .
+RUN mv /tmp/vendor -t .
 
 USER php_fpm_service_user
 EXPOSE 21104
@@ -44,8 +56,17 @@ EXPOSE 21104
 
 FROM base
 
-# Copy the app
-COPY --chown=root:php_fpm_service_user ./src/php_fpm_service /usr/src/php_fpm_service
+# 1. Workdir
+WORKDIR /usr/src/php_fpm_service
+
+# 2. Install dependencies
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service/composer.json ./composer.json
+RUN composer update && \
+	mv vendor -t /tmp
+
+# 3. Copy the app
+COPY --chown=root:php_fpm_service_user ./src/php_fpm_service .
+RUN mv /tmp/vendor -t .
 
 USER php_fpm_service_user
 EXPOSE 21104
