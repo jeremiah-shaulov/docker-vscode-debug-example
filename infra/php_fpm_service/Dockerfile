@@ -44,12 +44,10 @@ WORKDIR /usr/src/php_fpm_service
 
 # 3. Install dependencies
 COPY --chown=root:php_fpm_service_user ./src/php_fpm_service/composer.json ./composer.json
-RUN composer update && \
-	mv vendor -t /tmp
+RUN composer update
 
 # 4. Copy the app
 COPY --chown=root:php_fpm_service_user ./src/php_fpm_service .
-RUN mv /tmp/vendor -t .
 
 USER php_fpm_service_user
 EXPOSE 21104
@@ -66,12 +64,10 @@ WORKDIR /usr/src/php_fpm_service
 
 # 2. Install dependencies
 COPY --chown=root:php_fpm_service_user ./src/php_fpm_service/composer.json ./composer.json
-RUN composer update && \
-	mv vendor -t /tmp
+RUN composer update
 
 # 3. Copy the app
 COPY --chown=root:php_fpm_service_user ./src/php_fpm_service .
-RUN mv /tmp/vendor -t .
 
 USER php_fpm_service_user
 EXPOSE 21104
