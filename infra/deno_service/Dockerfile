@@ -33,10 +33,11 @@ EXPOSE 48050
 
 FROM denoland/deno:distroless-1.16.2
 
-COPY --from=debug --chown=1993 /deno-dir /deno-dir
-COPY --from=debug --chown=root:root /usr/src/deno_service /usr/src/deno_service
-
 WORKDIR /usr/src/deno_service
+
+COPY --from=debug --chown=1993 /deno-dir /deno-dir
+COPY --from=debug --chown=root:root /usr/src/deno_service .
+
 USER 1993
 CMD ["run", "--unstable", "--allow-net", "main.ts"]
 
