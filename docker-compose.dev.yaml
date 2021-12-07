@@ -2,6 +2,7 @@ services:
 
   http_service:
     volumes:
+      - ./infra/http_service/conf.d:/etc/nginx/conf.d
       - ./src/php_fpm_service:/usr/src/php_fpm_service
     restart: "no"
 
