@@ -20,9 +20,12 @@ RUN apt-get update && \
 RUN groupadd -g 1000 php_fpm_service_user && \
 	useradd -u 1000 -g php_fpm_service_user -s /bin/false php_fpm_service_user
 
-# 4. Delete default config, and don't use default port 9000
+# 4. Delete default config, and don't use default port 9000.
+#	And and use php.ini-production.
 RUN rm /usr/local/etc/php-fpm.d/www.conf.default && \
-	sed --regexp-extended -e 's/listen\s*=\s*9000//g' -i /usr/local/etc/php-fpm.d/zz-docker.conf
+	sed --regexp-extended -e 's/listen\s*=\s*9000//g' -i /usr/local/etc/php-fpm.d/zz-docker.conf && \
+	cd /usr/local/etc/php && \
+	ln -s php.ini-production php.ini
 
 # 5. Copy my version of www.conf
 COPY ./infra/php_fpm_service/www.conf /usr/local/etc/php-fpm.d/www.conf
