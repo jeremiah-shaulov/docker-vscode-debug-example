@@ -10,12 +10,12 @@ namespace dotnet_service
 	{	static async Task Main(string[] args)
 		{	var cancellationSource = new CancellationTokenSource();
 			var cancellationToken = cancellationSource.Token;
-			Console.CancelKeyPress += delegate
+			Console.CancelKeyPress += (sender, e) =>
 			{	cancellationSource.Cancel();
 				Console.WriteLine("Service terminated");
 			};
 
-			TcpListener listener = new TcpListener(new IPEndPoint(IPAddress.Any, 7287));
+			var listener = new TcpListener(new IPEndPoint(IPAddress.Any, 7287));
 			listener.Start();
 			cancellationToken.Register(listener.Stop);
 
@@ -23,30 +23,34 @@ namespace dotnet_service
 
 			while (!cancellationToken.IsCancellationRequested)
 			{	try
-				{	var client = await listener.AcceptTcpClientAsync();
-					var clientTask = HandleConn(client, cancellationToken).ContinueWith(t => client.Dispose());
+				{	var _ = HandleConn(await listener.AcceptTcpClientAsync());
 				}
 				catch (SocketException) when (cancellationToken.IsCancellationRequested)
 				{	break;
 				}
-				catch (Exception ex)
-				{	Console.WriteLine("Error handling client: {0}", ex.Message);
+				catch (Exception e)
+				{	Console.WriteLine("Error handling client: {0}", e.Message);
 				}
 			}
 
-			async Task HandleConn(TcpClient client, CancellationToken cancellationToken)
-			{	Console.WriteLine("Conn");
-				var stream = client.GetStream();
-				await stream.WriteAsync(Encoding.ASCII.GetBytes("Hi, i'm dotnet_service\n"));
-				var buffer = new byte[1024];
-				while (true)
-				{	var nRead = await stream.ReadAsync(buffer, 0, buffer.Length);
-					if (nRead == 0)
-					{	break;
+			async Task HandleConn(TcpClient client)
+			{	try
+				{	Console.WriteLine("Conn");
+					var stream = client.GetStream();
+					await stream.WriteAsync(Encoding.ASCII.GetBytes("Hi, i'm dotnet_service\n"));
+					var buffer = new byte[1024];
+					while (true)
+					{	var nRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+						if (nRead == 0)
+						{	break;
+						}
+						await stream.WriteAsync(buffer, 0, nRead);
 					}
-					await stream.WriteAsync(buffer, 0, nRead);
+					await stream.WriteAsync(Encoding.ASCII.GetBytes("Bye\n"));
 				}
-				await stream.WriteAsync(Encoding.ASCII.GetBytes("Bye\n"));
+				finally
+				{	client.Dispose();
+				}
 			}
 		}
 	}
