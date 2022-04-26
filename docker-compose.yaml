@@ -39,6 +39,8 @@
 # - 22742 - If docker-compose.dev.yaml is enabled, Python debugger on python_service listens to this port. This port appears in ".vscode/launch.json" file.
 #
 
+version: "3.7"
+
 services:
 
   http_service:

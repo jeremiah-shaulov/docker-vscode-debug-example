@@ -5,8 +5,7 @@
 FROM php:8.0-fpm as base
 
 # 1. Install required extensions
-#	Here i install pdo_mysql (for demonstration purposes, i'll not be using it)
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install opcache
 
 # 2. Install composer
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer

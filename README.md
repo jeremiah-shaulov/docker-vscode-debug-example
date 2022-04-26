@@ -40,7 +40,7 @@ Change HTTP_PORT if needed.
 
 Every time you edit something either in infrastructure definition ([docker-compose.yaml](./docker-compose.yaml), `Dockerfile`) or in source code, you need to rerun the above command to rebuild the containers.
 
-This starts 9 docker services:
+This starts 10 docker services:
 - http_service
 - php_fpm_service
 - deno_service

@@ -2,7 +2,7 @@
 # Debug image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:debian-1.16.2 as debug
+FROM denoland/deno:debian-1.19.3 as debug
 
 # 1. Source code will be copied to here.
 WORKDIR /usr/src/deno_service
@@ -31,7 +31,7 @@ EXPOSE 48050
 # Production image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:distroless-1.16.2
+FROM denoland/deno:distroless-1.19.3
 
 WORKDIR /usr/src/deno_service
 
