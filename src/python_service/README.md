@@ -66,10 +66,9 @@ COPY ./src/python_service .
 
 CMD ["python", "-m", "ptvsd", "--host", "0.0.0.0", "--port", "22742", "--multiprocess", "main.py"]
 
-# app service port
-EXPOSE 8497
-# debugger port
-EXPOSE 22742
+# app service port = 8497
+# debugger port = 22742
+EXPOSE 8497 22742
 ```
 
 To start our service, we run `python` command with debugger parameters. The debugger server (ptvsd) will be listening on `0.0.0.0:22742` (default route, port 22742).

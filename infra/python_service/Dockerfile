@@ -29,10 +29,9 @@ COPY ./src/python_service .
 
 CMD ["python", "-m", "ptvsd", "--host", "0.0.0.0", "--port", "22742", "--multiprocess", "main.py"]
 
-# app service port
-EXPOSE 8497
-# debugger port
-EXPOSE 22742
+# app service port = 8497
+# debugger port = 22742
+EXPOSE 8497 22742
 
 
 # ------------------------------------------------------------------------------
@@ -48,5 +47,5 @@ COPY ./src/python_service .
 
 CMD ["python", "main.py"]
 
-# app service port
+# app service port = 8497
 EXPOSE 8497

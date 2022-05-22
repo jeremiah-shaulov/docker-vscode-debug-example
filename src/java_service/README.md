@@ -74,10 +74,9 @@ USER java_service_user
 ENV MAVEN_CONFIG=/home/java_service_user
 CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9455", "-cp", "/usr/lib/java_service/java_service.jar", "com.none.java_service.App"]
 
-# app service port
-EXPOSE 27712
-# debugger port
-EXPOSE 9455
+# app service port = 27712
+# debugger port = 9455
+EXPOSE 27712 9455
 ```
 
 To start our service, we run `java` command with debugger parameters. The Java debugger server will be listening on `*:9455` (default route, port 9455).

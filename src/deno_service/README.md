@@ -57,10 +57,9 @@ RUN deno cache --unstable main.ts && \
 
 CMD ["run", "--unstable", "--allow-net", "--inspect=0.0.0.0:48050", "main.ts"]
 
-# app service port
-EXPOSE 5090
-# debugger port
-EXPOSE 48050
+# app service port = 5090
+# debugger port = 48050
+EXPOSE 5090 48050
 ```
 
 To start our service, we run `deno` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:48050` (default route, port 48050).

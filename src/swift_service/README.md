@@ -74,12 +74,10 @@ RUN swift build -Xswiftc -g && \
 WORKDIR /home/swift_service_user
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & /usr/bin/swift_service"]
 
-# app service port
-EXPOSE 15880
-# lldb-server listens for connections
-EXPOSE 2418
-# lldb-server service port
-EXPOSE 16276
+# app service port = 15880
+# lldb-server listens for connections = 2418
+# lldb-server service port = 16276
+EXPOSE 15880 2418 16276
 ```
 
 The startup command looks like this: `bash -c 'lldb-server platform --server --listen 0.0.0.0:2418 --gdbserver-port 16276 & swift run'`.

@@ -49,10 +49,9 @@ WORKDIR /usr/src/node_service
 USER node
 CMD ["node", "--inspect=0.0.0.0:8548", "main.js"]
 
-# app service port
-EXPOSE 12982
-# debugger port
-EXPOSE 8548
+# app service port = 12982
+# debugger port = 8548
+EXPOSE 12982 8548
 ```
 
 To start our service, we run `node` command with debugger parameters. The debugger server (Chrome Debugging Protocol) will be listening on `0.0.0.0:8548` (default route, port 8548).

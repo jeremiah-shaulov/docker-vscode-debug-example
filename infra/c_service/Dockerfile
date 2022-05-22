@@ -32,12 +32,10 @@ RUN clang -O0 -g main.c -lev -o /usr/bin/c_service && \
 WORKDIR /home/c_service_user
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:2201 --gdbserver-port 9850 & /usr/bin/c_service"]
 
-# app service port
-EXPOSE 8543
-# lldb-server listens for connections
-EXPOSE 2201
-# lldb-server service port
-EXPOSE 9850
+# app service port = 8543
+# lldb-server listens for connections = 2201
+# lldb-server service port = 9850
+EXPOSE 8543 2201 9850
 
 
 # ------------------------------------------------------------------------------
@@ -60,5 +58,5 @@ WORKDIR /home/c_service_user
 USER c_service_user
 CMD ["/usr/bin/c_service"]
 
-# app service port
+# app service port = 8543
 EXPOSE 8543

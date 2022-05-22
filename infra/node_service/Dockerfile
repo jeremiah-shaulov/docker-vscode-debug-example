@@ -16,10 +16,9 @@ WORKDIR /usr/src/node_service
 USER node
 CMD ["node", "--inspect=0.0.0.0:8548", "main.js"]
 
-# app service port
-EXPOSE 12982
-# debugger port
-EXPOSE 8548
+# app service port = 12982
+# debugger port = 8548
+EXPOSE 12982 8548
 
 
 # ------------------------------------------------------------------------------
@@ -32,5 +31,5 @@ WORKDIR /usr/src/node_service
 USER node
 CMD ["node", "main.js"]
 
-# app service port
+# app service port = 12982
 EXPOSE 12982

@@ -88,12 +88,10 @@ RUN cargo build && \
 WORKDIR /home/rust_service_user
 CMD ["bash", "-c", "lldb-server platform --server --listen 0.0.0.0:29935 --gdbserver-port 18088 & /usr/bin/rust_service"]
 
-# app service port
-EXPOSE 9023
-# lldb-server listens for connections
-EXPOSE 29935
-# lldb-server service port
-EXPOSE 18088
+# app service port = 9023
+# lldb-server listens for connections = 29935
+# lldb-server service port = 18088
+EXPOSE 9023 29935 18088
 ```
 
 First i `apt`-install `lldb` package, that also includes `lldb-server`.
