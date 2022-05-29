@@ -1,8 +1,8 @@
 # To run the containers in production mode do:
-# HTTP_PORT=8888 docker-compose up -d --build
+# HTTP_PORT=8888 docker compose up -d --build
 #
 # To run the containers in dev mode do:
-# HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
+# HTTP_PORT=8888 docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
 #
 # To debug rust, swift and c need to set this flag on host system:
 # echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope

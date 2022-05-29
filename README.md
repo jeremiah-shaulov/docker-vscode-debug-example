@@ -33,7 +33,7 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 Debugging will only work in dev. To start dev, `cd` to the directory where you cloned the project, and:
 
 ```bash
-HTTP_PORT=8888 docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
+HTTP_PORT=8888 docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
 ```
 
 Change HTTP_PORT if needed.
@@ -58,10 +58,10 @@ You can see the services state by executing:
 docker ps --all
 ```
 
-If you want to start the same services in production mode (slimmer images, faster execution, and impossible debugging), then run `docker-compose up` like this:
+If you want to start the same services in production mode (slimmer images, faster execution, and impossible debugging), then run `docker compose up` like this:
 
 ```bash
-HTTP_PORT=8888 docker-compose up -d --build
+HTTP_PORT=8888 docker compose up -d --build
 ```
 
 But in this article, i always assume that you're running in dev mode.
@@ -86,12 +86,12 @@ The debugger must stop at that breakpoint.
 
 ```bash
 # from the project directory
-docker-compose down
+docker compose down
 ```
 
 ## Services architecture
 
-`http_service` listens for HTTP requests on port that you can override with `HTTP_PORT` environment variable when you run `docker-compose up` (in this article i use value 8888).
+`http_service` listens for HTTP requests on port that you can override with `HTTP_PORT` environment variable when you run `docker compose up` (in this article i use value 8888).
 This service forwards requests to "*.php" files to "php_fpm_service:21104".
 
 Within Docker infrastructure each container has hostname matching the service name, So from within any container, "http_service:8888" is the "host:port" where HTTP server is running.
